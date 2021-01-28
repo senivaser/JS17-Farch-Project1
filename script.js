@@ -10,5 +10,6 @@ let period
 //Вывод на экран с помощью alert() (1.4)
 
 alert('Hello, world');
+console.log('Hello master')
 
 
