@@ -15,7 +15,7 @@ if (lang === 'ru')
 else if (lang === 'en') 
   task1a = ["Monday", "Tuesday", "Wednesday", "Thusrday", "Friday", "Saturady", "Sunday"];
 else
-  task1a = ['This language does not exist']
+  task1a = ['This language does not exist'];
 
 console.log('1.a result: ', ...task1a)
 
@@ -28,7 +28,7 @@ switch (lang) {
     task1b = ["Monday", "Tuesday", "Wednesday", "Thusrday", "Friday", "Saturady", "Sunday"];
   break;
   default:
-    task1b = ['This language does not exist'] 
+    task1b = ['This language does not exist']; 
 }
 
 console.log('1.b result: ', ...task1b)
@@ -61,6 +61,6 @@ let role = (namePerson === 'Артем') ?
   'директор':
   (namePerson === 'Максим')?
   'преподаватель':
-  'студент'
+  'студент';
 
-console.log(`${namePerson} - это ${role}`)
+console.log(`${namePerson} - это ${role}`);
