@@ -19,7 +19,7 @@ console.log('1.a result: ', ...task1a);
 //3.2.1b
 switch (lang) {
   case ('ru'):
-    task1b = ["Понедельник", "Вторник", "Среда", "Четверг", "Пятница", "Суббота", "Воскресенье"]
+    task1b = ["Понедельник", "Вторник", "Среда", "Четверг", "Пятница", "Суббота", "Воскресенье"];
   break;
   case ('en'):
     task1b = ["Monday", "Tuesday", "Wednesday", "Thusrday", "Friday", "Saturady", "Sunday"];
