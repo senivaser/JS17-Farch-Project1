@@ -10,14 +10,11 @@ let lang = prompt('Choose Language (en, ru): ');
 let task1a, task1b, task1c;
 
 //3.2.1a
-if (lang === 'ru')
-  task1a = ["Понедельник", "Вторник", "Среда", "Четверг", "Пятница", "Суббота", "Воскресенье"];
-else if (lang === 'en') 
-  task1a = ["Monday", "Tuesday", "Wednesday", "Thusrday", "Friday", "Saturady", "Sunday"];
-else
-  task1a = ['This language does not exist'];
+if (lang === 'ru') task1a = ["Понедельник", "Вторник", "Среда", "Четверг", "Пятница", "Суббота", "Воскресенье"];
+else if (lang === 'en') task1a = ["Monday", "Tuesday", "Wednesday", "Thusrday", "Friday", "Saturady", "Sunday"];
+else task1a = ['This language does not exist'];
 
-console.log('1.a result: ', ...task1a)
+console.log('1.a result: ', ...task1a);
 
 //3.2.1b
 switch (lang) {
@@ -31,7 +28,7 @@ switch (lang) {
     task1b = ['This language does not exist']; 
 }
 
-console.log('1.b result: ', ...task1b)
+console.log('1.b result: ', ...task1b);
 
 //3.2.1c
 const data = [
@@ -40,7 +37,7 @@ const data = [
   [undefined, ['This language does not exist']]
 ];
 
-const targetKeyItem = data.find(target => target[0] === lang)
+const targetKeyItem = data.find(target => target[0] === lang);
 
 task1c = data.find(item => item[0] === (              //Здесь нам нужно найти элемент по ключу(языку), но если его нет, 
     targetKeyItem &&                                  //то по ключу undefined. Для того, чтобы превратить несуществующий ключ
