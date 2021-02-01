@@ -40,9 +40,11 @@ const data = [
   [undefined, ['This language does not exist']]
 ];
 
+const targetKeyItem = data.find(target => target[0] === lang)
+
 task1c = data.find(item => item[0] === (              //Здесь нам нужно найти элемент по ключу(языку), но если его нет, 
-    data.find(target => target[0] === lang) &&        //то по ключу undefined. Для того, чтобы превратить несуществующий ключ
-    data.find(target => target[0] === lang)[0]        //в undefined, произведем вложенный поиск по ключу внутри 
+    targetKeyItem &&                                  //то по ключу undefined. Для того, чтобы превратить несуществующий ключ
+    targetKeyItem[0]                                  //в undefined, произведем вложенный поиск по ключу внутри 
     )                                                 //критерия для поиска. Конструкция с условным оператором здесь служит проверкой
   )[1];                                               //на существование элементов у критерия. Если результат undefined,   
                                                       //то это наш ключ, а если нет, то сам критерий должен быть ['lang', [...]][0].
