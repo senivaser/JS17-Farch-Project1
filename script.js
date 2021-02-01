@@ -15,7 +15,7 @@ Date.prototype.daysInNextMonth = function() {
 };
 
 
-const apprDays = new Date().daysInNextMonth() //Дней в следующем месяце для расчета (из тех соображений, 
+const apprDays = new Date().daysInNextMonth(); //Дней в следующем месяце для расчета (из тех соображений, 
                                               //что бюджет планируется на следующий месяц)
 
 
@@ -48,11 +48,11 @@ deposit = confirm(`Есть ли у вас депозит в банке?`); //3.
 
 //3.1.5
 let expenses1 = prompt('Введите обязательную статью расходов (1):');
-let amount1 = prompt(`Во сколько вам обойдется статья расходов \"${expenses1}\"? (р)`);
+let amount1 = +prompt(`Во сколько вам обойдется статья расходов \"${expenses1}\"? (р)`);
 let expenses2 = prompt('Введите обязательную статью расходов (2):');
-let amount2 = prompt(`Во сколько вам обойдется статья расходов \"${expenses2}\"? (р)`);
+let amount2 = +prompt(`Во сколько вам обойдется статья расходов \"${expenses2}\"? (р)`);
 
-let budgetMonth = +amount1 + +amount2; //3.1.6
+let budgetMonth = amount1 + amount2; //3.1.6
 
 //3.1.7
 let timeSuccess = (mission/(money - budgetMonth) !== Infinity) ?
@@ -69,17 +69,12 @@ console.log('-----------------------');
 
 //3.1.9
 if (!isNaN(budgetDay)) {
-  if (budgetDay >= 0 && budgetDay < 600)
-    console.log('К сожалению, ваш уровень дохода ниже среднего');
-  else if (budgetDay < 1200) 
-    console.log('У вас средний уровень дохода');
-  else if (budgetDay >= 1200) 
-    console.log('К сожалению, ваш уровень дохода ниже среднего');
-  else 
-    console.log('Что-то пошло не так');
+  if (budgetDay >= 0 && budgetDay < 600) console.log('К сожалению, ваш уровень дохода ниже среднего');
+  else if (budgetDay < 1200) console.log('У вас средний уровень дохода');
+  else if (budgetDay >= 1200) console.log('К сожалению, ваш уровень дохода ниже среднего');
+  else console.log('Что-то пошло не так');
 } 
-else 
-  console.log('Что-то пошло не так');
+else console.log('Что-то пошло не так');
 console.log('-----------------------');
 
 
