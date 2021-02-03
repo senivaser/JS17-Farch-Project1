@@ -46,13 +46,13 @@ deposit = confirm(`Есть ли у вас депозит в банке?`); //3.
 
 //Вспомогательные промты 5.1
 const checkNumberPromt = function (message, exception='') {
-  let result = 0;
+  let result;
   do {
+    result = +prompt(message + exception);
     if (isNaN(result) || typeof(result) !== 'number') {
-      console.log(`Entry is not a number: try again`);
+      console.log('Entry is not a number: try again');
       exception = '(Вы не ввели число. Повторите ввод, пожалуйста)';
     }
-    result = +prompt(message + exception);
   } while (isNaN(result) || typeof(result) !== 'number');
 
   return result;
