@@ -9,11 +9,22 @@ const task1 = function(){
 }
 
 //5.2.2
+
+const findSimpleNumbers = function (border) {
+    let arr = Array.from({length: border}, (e, i) => i + 2);
+    for (let i = 2; i < border; i++) {
+        if (arr.find((item) => item === i)) {
+            arr = arr.filter(item => ((item%i !== 0) || (item <= i)))
+        }
+    }
+    return arr
+}
+
 const task2 = function(){
-    const simpleNumbers = [2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71, 73, 79, 83, 89, 97]
+    const simpleNumbers = findSimpleNumbers(100)
     for (let i = 0; i < simpleNumbers.length - 1; i++) {
         console.log(simpleNumbers[i],  ` Делители этого числа: 1, ${simpleNumbers[i]}`);
     }
 }
 
-task1();
+task2();
