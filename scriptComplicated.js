@@ -4,7 +4,7 @@
 const task1 = function(){
     const arr =  ['123123', '123123', '123123', '23232' ,'434234', '2342342', '312313'];
     arr.map(item => {
-        if (item.slice(0) === '2' || item.slice(0) === '4') console.log(item);
+        if (item.slice(0,1) === '2' || item.slice(0,1) === '4') console.log(item);
     })
 }
 
@@ -15,3 +15,5 @@ const task2 = function(){
         console.log(simpleNumbers[i],  ` Делители этого числа: 1, ${simpleNumbers[i]}`);
     }
 }
+
+task1();
