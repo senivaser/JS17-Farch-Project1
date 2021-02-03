@@ -27,7 +27,7 @@ const getDaysInNextMonth = function() {
 const start = function () {
   money = 0;
   do {
-    money = prompt('Ваш месячный доход');
+    money = +prompt('Ваш месячный доход');
   } while (isNaN(parseFloat(money)));
   
 }
@@ -48,12 +48,12 @@ deposit = confirm(`Есть ли у вас депозит в банке?`); //3.
 const checkNumberPromt = function (message, exception='') {
   let result = 0;
   do {
-    if (isNaN(result)) {
+    if (isNaN(result) || typeof(result) !== 'number') {
       console.log(`Entry is not a number: try again`);
       exception = '(Вы не ввели число. Повторите ввод, пожалуйста)';
     }
     result = +prompt(message + exception);
-  } while (isNaN(result));
+  } while (isNaN(result) || typeof(result) !== 'number');
 
   return result;
 
@@ -136,9 +136,9 @@ const showStatusIncome = function(budgetDay) {
 
 //a
 console.log('---showTypeOf---');
-showTypeOf('money', money);
-showTypeOf('income', income);
-showTypeOf('deposit', deposit);
+showTypeOf(money);
+showTypeOf(income);
+showTypeOf(deposit);
 console.log('------');
 
 //b
