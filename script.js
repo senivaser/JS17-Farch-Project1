@@ -12,6 +12,7 @@ function getRandomInt(max) {
 const checkPromt = function (
     message = '', 
     conditions = {},
+    exitReturn = false,
     numPromt = false,
     nullPass = true,
     addMessage = '') {
@@ -34,6 +35,10 @@ const checkPromt = function (
         } 
        
         if (result === null && nullPass) trigger = false
+        if (exitReturn) {
+            result = [addMessage, result]
+            trigger = false
+        }
 
         return (trigger) ? checkPromt(message, 
             conditions,
@@ -47,22 +52,48 @@ const checkPromt = function (
 ///////////////////
 
 
-const startgame = function (status = '')  {
+const startgame = function (x = getRandomInt(100), countDownNumber = 10, message = '')  {
 
-    let x = getRandomInt(100)
-    //console.log(x) ЧИТЫЫЫ!!!!
+    console.log(x) //ЧИТЫЫЫ!!!!
+    if (countDownNumber === 0) {
 
-    y = checkPromt('Угадай число от 1 до 100.', 
+        if (confirm('У вас закончились попытки. Начать играть заново?')) {
+            startgame()
+        }
+
+        else {
+            alert('Игра окончена')
+            return null
+        }
+
+    }
+
+    y = checkPromt(`Угадай число от 1 до 100. ${message} Осталось попыток: ${countDownNumber}`, 
         {   
-            'Это не число': (result) => !isNumber(result),
-            'Загаданное число меньше': (result) => x < result,
-            'Загаданное число больше': (result) => x > result,
+            ' (Это не число)': (result) => !isNumber(result),
+            ' (Загаданное число меньше)': (result) => x < result,
+            ' (Загаданное число больше)': (result) => x > result,
 
-        })
+        }, true, true)
     
-    if (y === null) alert('Игра окончена')
-    else alert('Поздравляем, Вы угадали!')
+    if (y[1] !== x) {
 
+        console.log(y[1], y[1] === 'null')
+
+        if (y[1] === null) {
+            alert('Игра окончена')
+            return null
+        }
+
+        countDownNumber--
+        startgame(x, countDownNumber, y[0])
+    }
+   
+    else if (confirm('Поздравляем, Вы угадали! Попробуете еще раз?')) startgame()
+    else {
+        alert('Игра окончена')
+        return null
+    }
     
 }
 
