@@ -10,12 +10,12 @@ function getRandomInt(max) {
 }
 
 const checkConditions = function(conditions, trigger, result, addMessage){
-    const checkResult = Boolean(conditions[0][1](result))
+    const checkResult = Boolean(conditions && conditions[0][1](result))
     if (checkResult) {
         trigger = true
-        addMessage = conditions[0][0]
+        addMessage = conditions && conditions[0][0]
     }
-    conditions.shift()
+    conditions && conditions.shift()
     return (trigger || !conditions.length) ? [trigger, addMessage]: checkConditions(conditions, trigger, result, addMessage)
 }
 
