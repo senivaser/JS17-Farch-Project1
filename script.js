@@ -9,6 +9,16 @@ function getRandomInt(max) {
     return Math.floor(Math.random() * Math.floor(max));
 }
 
+const checkConditions = function(conditions, trigger, result, addMessage){
+    const checkResult = Boolean(conditions[0][1](result))
+    if (checkResult) {
+        trigger = true
+        addMessage = conditions[0][0]
+    }
+    conditions.shift()
+    return (trigger || !conditions.length) ? [trigger, addMessage]: checkConditions(conditions, trigger, result, addMessage)
+}
+
 const checkPromt = function (
     message = '', 
     conditions = {},
@@ -23,16 +33,8 @@ const checkPromt = function (
         let result = prompt(message + addMessage)
         result = (result === null) ? null: (numPromt) ? +result: result;
         
-        for (let label in conditions){
-            if (trigger) continue
-            else {
-                const checkResult = Boolean(conditions[label](result))
-                if (checkResult) {
-                    trigger = true
-                    addMessage = label
-                }
-            }
-        } 
+         
+        [trigger, addMessage] = checkConditions(conditions, trigger, result, addMessage)
        
         if (result === null && nullPass) trigger = false
         if (exitReturn) {
@@ -68,13 +70,13 @@ const startgame = function (x = getRandomInt(100), countDownNumber = 10, message
 
     }
 
-    y = checkPromt(`Угадай число от 1 до 100. ${message} Осталось попыток: ${countDownNumber}`, 
-        {   
-            ' (Это не число)': (result) => !isNumber(result),
-            ' (Загаданное число меньше)': (result) => x < result,
-            ' (Загаданное число больше)': (result) => x > result,
+    const y = checkPromt(`Угадай число от 1 до 100. ${message} Осталось попыток: ${countDownNumber}`, 
+        [   
+            [' (Это не число)', (result) => !isNumber(result)],
+            [' (Загаданное число меньше)', (result) => x < result],
+            [' (Загаданное число больше)', (result) => x > result],
 
-        }, true, true)
+        ], true, true)
     
     if (y[1] !== x) {
 
