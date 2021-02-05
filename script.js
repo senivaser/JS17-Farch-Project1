@@ -21,6 +21,8 @@ const getDaysInNextMonth = function() {
   return new Date().daysInNextMonth()
 }
 
+
+
 //Ввод входных данных
 
 //5.1.1
@@ -34,6 +36,8 @@ const start = function () {
 
 start(); //Сорри, что функция не чистая, но так в уроке написано. =( 
 
+
+
 //3.1
 addExpenses = prompt(`Перечислите возможные расходы за расчитываемый\
   период через запятую (пример: Квартплата, проездной, кредит)`)
@@ -42,7 +46,11 @@ addExpenses = prompt(`Перечислите возможные расходы �
   .map(item => item.replace(/\s/g, ''));     //3.1.3
 
 
-deposit = confirm(`Есть ли у вас депозит в банке?`); //3.1.4
+
+
+  deposit = confirm(`Есть ли у вас депозит в банке?`); //3.1.4
+
+
 
 //Вспомогательные промты 5.1
 const checkNumberPromt = function (message, exception='') {
@@ -69,6 +77,8 @@ const checkNaturalPromt = function (message, checkNumberPromt, exception = '') {
 }
 
 
+
+
 //5.1.2
 let expenses = []
 
@@ -87,6 +97,8 @@ const getExpensesMonth = function () {
 
 let expensesSum = getExpensesMonth();
 
+
+
 //4.1.2 reworked 5.1
 const getAccumulatedMonth = function (money, expensesSum) {
   
@@ -94,8 +106,12 @@ const getAccumulatedMonth = function (money, expensesSum) {
 
 }
 
+
+
 //4.1.3 reworked 5.1
 let accumulatedMonth = getAccumulatedMonth(money, expensesSum);
+
+
 
 //4.1.4 reworked 5.1.3
 const getTargetMonth = function (mission, accumulatedMonth) {
@@ -106,6 +122,8 @@ const getTargetMonth = function (mission, accumulatedMonth) {
 }
 
 let targetMonth = getTargetMonth(mission, accumulatedMonth);
+
+
 
 //4.1.6
 budgetDay = accumulatedMonth/getDaysInNextMonth();
@@ -133,13 +151,6 @@ const showStatusIncome = function(budgetDay) {
 } 
 
 //Вывод
-
-//a
-console.log('---showTypeOf---');
-showTypeOf(money);
-showTypeOf(income);
-showTypeOf(deposit);
-console.log('------');
 
 //b
 console.log('---getExpensesMonth---');
