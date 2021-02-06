@@ -70,7 +70,7 @@ const startgame = function (x = getRandomInt(100), countDownNumber = 10, message
 
     }
 
-    const y = checkPromt(`Угадай число от 1 до 100. ${message} Осталось попыток: ${countDownNumber}`, 
+    const entry = checkPromt(`Угадай число от 1 до 100. ${message} Осталось попыток: ${countDownNumber}`, 
         [   
             [' (Это не число)', (result) => !isNumber(result)],
             [' (Загаданное число меньше)', (result) => x < result],
@@ -78,11 +78,11 @@ const startgame = function (x = getRandomInt(100), countDownNumber = 10, message
 
         ], true, true)
     
-    if (y[1] !== x) {
+    if (entry[1] !== x) {
 
-        console.log(y[1], y[1] === 'null')
+        console.log(entry[1], entry[1] === 'null')
 
-        if (y[1] === null) {
+        if (entry[1] === null) {
             alert('Игра окончена')
             return null
         }
