@@ -76,18 +76,18 @@ const checkPromt = function (
     
         let localConditions = [].concat(conditions);
         let trigger = false;
-        let result = prompt(`${message} ${(addMessage !== '') ? `(${addMessage})`: ''}`);
-        result = (isEmptyPass) ? (result.trim() === '') ? null: result: result;
-        result = (result === null) ? null: (isNumPromt) ? +result: result;
+        let result = prompt(`${message} ${(addMessage !== '') ? `(${addMessage})`: ''}`);           //Ввод
+        result = (isEmptyPass) ? (result.trim() === '') ? null: result: result;                     //Изменение результата ввода при флажке isEmptyPass
+        result = (result === null) ? null: (isNumPromt) ? +result: result;                          //Изменение результата ввода при флажке isNumPromt
 
-        [trigger, addMessage] = checkConditions(localConditions, trigger, result, addMessage)
+        [trigger, addMessage] = checkConditions(localConditions, trigger, result, addMessage)       //Проверка условий
         
-        if (result === null && isNullPass) trigger = false;
+        if (result === null && isNullPass) trigger = false;                                         //Пропуск проверок, если result = null при флажке isNullPass
 
         if (isExitReturn) {
             result = [addMessage, result];
             trigger = false;
-        }
+        }                                                                                           //Корректировка результата и пропуск проверок при флажке isExitReturn
 
         return (trigger) ? checkPromt(message, 
             conditions,
