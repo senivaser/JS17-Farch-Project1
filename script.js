@@ -1,54 +1,65 @@
 'use strict'
 
-//Инициализация переменных
-let money = 10000;
-let income = 'freelance';
-let addExpenses = 'internet';
-let deposit = true; 
-let mission = 50000;
-let period = 6;
-let budgetDay;
+////////////Вспомогательные функции///////////////
+//Проверка на тип "Число" из потокового ввода
+function isNumber (n){
+    return !isNaN(parseFloat(n)) && isFinite(n);
+};
 
 //Метод для Date.prototype.
 //Возвращает количество дней в следующем месяце для расчета.
 //Создан из тех соображений, что бюджет планируется на следующий месяц.
 Date.prototype.daysInNextMonth = function() {
-  return 32 - new Date(this.getFullYear(), this.getMonth() + 1, 32).getDate();
-};
-
-//getter для Date.prototype.daysInNextMonth
-const getDaysInNextMonth = function() {
-  return new Date().daysInNextMonth()
-}
-
-
-
-//Ввод входных данных
-
-//5.1.1
-const start = function () {
-  money = 0;
-  do {
-    money = +prompt('Ваш месячный доход');
-  } while (isNaN(parseFloat(money)));
+    return 32 - new Date(this.getFullYear(), this.getMonth() + 1, 32).getDate();
+  };
   
+  //getter для Date.prototype.daysInNextMonth
+  const getDaysInNextMonth = function() {
+    return new Date().daysInNextMonth()
+  }
+
+
+
+////////////Основная программа///////////////
+
+//Старт программы. Ввод дохода за месяц
+let money = 10000
+
+const start = function () {
+    money = 0;
+    do {
+      money = +prompt('Ваш месячный доход');
+    } while (isNumber(money));
+    
 }
 
-start(); //Сорри, что функция не чистая, но так в уроке написано. =( 
+start(); 
 
 
+//Объект переменных приложения 
+const appData = {
+    income: {},
+    addIncome: [],
+    expenses: {},
+    addExpenses: [],
+    deposit: false,
+    mission: 50000,
+    period: 3,
+    asking: function(){
+        
+        let addExpenses = prompt(`Перечислите возможные расходы за расчитываемый\
+        период через запятую (пример: Квартплата, проездной, кредит)`)
 
-//3.1
-addExpenses = prompt(`Перечислите возможные расходы за расчитываемый\
-  период через запятую (пример: Квартплата, проездной, кредит)`)
-  .toLowerCase()
-  .split(',')
-  .map(item => item.replace(/\s/g, ''));     //3.1.3
+        appData.addExpenses = addExpenses
+            .toLowerCase()
+            .split(',')
+            .map(item => item.trim()); 
 
+        appData.deposit = confirm(`Есть ли у вас депозит в банке?`);
+        
+    }
 
-
-
-  deposit = confirm(`Есть ли у вас депозит в банке?`); //3.1.4
+}
 
 
 
@@ -77,9 +88,6 @@ const checkNaturalPromt = function (message, checkNumberPromt, exception = '') {
 }
 
 
-
-
-//5.1.2
 let expenses = []
 
 const getExpensesMonth = function () {
@@ -126,17 +134,12 @@ let targetMonth = getTargetMonth(mission, accumulatedMonth);
 
 
 //4.1.6
-budgetDay = accumulatedMonth/getDaysInNextMonth();
+
+let budgetDay = accumulatedMonth/getDaysInNextMonth();
 
 //4.1.7
 
 //Новые Функции 4.1
-
-const showTypeOf = function (data) {
-  
-  console.log(data, ':', typeof(data));
-
-}
 
 const showStatusIncome = function(budgetDay) {
 
