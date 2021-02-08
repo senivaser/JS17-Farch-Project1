@@ -151,14 +151,14 @@ const appData = {
             [
                 ['Ввод не может быть пустым', (result) => (result === null)],
                 ['Необоходим хотя бы один буквенный символ', (result) => (result.match(/^[-+]?[0-9]+$/))]
-            ], false, true) //8.1.1a
+            ], false, true); //8.1.1a
 
             let cashIncome = checkPromt('Сколько в месяц вы на этом зарабатываете',
             [
                 ['Ввод не может быть пустым', (result) => (result === null)],
                 ['Введите число', (result) => (!isNumber(result))],
                 ['Доходы не могут иметь отрицательное значение', (result) => (result<0)]
-            ], true, true) //8.1.1b
+            ], true, true); //8.1.1b
             appData.income[itemIncome] = cashIncome
         }
         
@@ -257,18 +257,18 @@ const appData = {
                 ['Это не число', (result) => (!isNumber(result))],
                 ['Число процентов должно быть 0 до 100', (result) => (result < 0 || result > 100)]
             ],
-            true, true) //8.1.1d
+            true, true); //8.1.1d
             appData.moneyDeposit = checkPromt('Какая сумма лежит на депозите?',
             [
                 ['Ввод не может быть пустым', (result) => (result === null)],
                 ['Это не число', (result) => (!isNumber(result))],
                 ['Сумма на депозите не может иметь отрицательное значение', (result) => (result<0)]
             ],
-            true, true) //8.1.1e
+            true, true); //8.1.1e
         }
     },
     calcSavedMoney: function() {
-        appData.budgetMonth * appData.period
+        return appData.budgetMonth * appData.period;
     }
     //#endregion getMethods
 }
