@@ -169,7 +169,7 @@ const appData = {
             addExpenses
             .toLowerCase()
             .split(',')
-            .map(item => item.trim().capitalize()) :   //8.1.2
+            .map(item => item.trim()) :   //8.1.2
             []; 
 
         appData.deposit = confirm(`Есть ли у вас депозит в банке?`);
@@ -291,7 +291,7 @@ let statusIncome = appData.getStatusIncome()
 //#endregion 7.1.5 || 7.1.11
 
 //#endregion Основная программа
-appData.getInfoDeposit()
+appData.getInfoDeposit();
 
 //#region 7.1.12 || 7.1.13 Вывод 
 
@@ -318,5 +318,7 @@ console.log("Наша программа включает в себя данны
 for (let property in appData) {
     console.log(property)
 }
+console.log('---addExpenses---');
+console.log(appData.addExpenses.map(item => item.capitalize()).join(' '))
 
 //#endregion 7.1.12  Вывод
