@@ -7,6 +7,11 @@ function isNumber (n){
     return !isNaN(parseFloat(n)) && isFinite(n);
 };
 
+//Строка с большой буквы
+String.prototype.capitalize = function() {
+    return this.charAt(0).toUpperCase() + this.slice(1);
+}
+
 //Метод для Date.prototype.
 //Возвращает количество дней в следующем месяце для расчета.
 //Создан из тех соображений, что бюджет планируется на следующий месяц.
@@ -37,9 +42,9 @@ conditions - определяет корректность ввода, явля�
 
 isNumPromt - если true, то promt работает как +promt, однако значение null не изменяется; 
 
-isNullPass - результат ввода null проходит все проверки; 
-
 isEmptyPass - если на входе пустая строка, результат ввода считается null
+
+isNullPass - результат ввода null проходит все проверки; 
 
 isExitReturn - если true, то в случае первого правдивого условия из conditions не повторяет
     запрос, а возвращает ["сообщение",  результат ввода]; 
@@ -48,21 +53,6 @@ addMessage - доп сообщение для первого запроса
 
 
 */
-
-const checkConditions = function(conditions, trigger, result, addMessage){
-    const checkResult = Boolean(conditions && conditions[0][1](result));
-    
-    if (checkResult) {
-        trigger = true;
-        addMessage = conditions && conditions[0][0];
-    }
-    
-    conditions && conditions.shift()
-    
-    return (trigger || !conditions.length) ? 
-        [trigger, addMessage]: 
-        checkConditions(conditions, trigger, result, addMessage);
-}
 
 const checkPromt = function (
     message = '', 
@@ -73,7 +63,22 @@ const checkPromt = function (
     isExitReturn = false,
     addMessage = '') {
     
-    
+        const checkConditions = function(conditions, trigger, result, addMessage){
+            const checkResult = Boolean(conditions && conditions[0][1](result));
+            
+            if (checkResult) {
+                trigger = true;
+                addMessage = conditions && conditions[0][0];
+            }
+            
+            conditions && conditions.shift()
+            
+            return (trigger || !conditions.length) ? 
+                [trigger, addMessage]: 
+                checkConditions(conditions, trigger, result, addMessage);
+        }
+
+
         let localConditions = [].concat(conditions);
         let trigger = false;
         let result = prompt(`${message} ${(addMessage !== '') ? `(${addMessage})`: ''}`);           //Ввод
@@ -107,7 +112,9 @@ const checkPromt = function (
 
 //#region Основная программа
 
-//Старт программы. Ввод дохода за месяц
+//#region Запуск программы
+
+//Ввод дохода за месяц
 let money;
 
 const start = function () {
@@ -119,15 +126,18 @@ const start = function () {
 }
 
 start(); 
+//#endregion Запуск программы
 
 
-//Объект переменных приложения 
+//#region Объект переменных приложения 
 const appData = {
     income: {},
     addIncome: [],
     expenses: {},
     addExpenses: [],
     deposit: false,
+    percentDeposit: 0,         //8.0
+    moneyDeposit: 0,           //8.0
     mission: 50000,
     period: 3,
     budget: money,             //7.1.2
@@ -135,6 +145,22 @@ const appData = {
     budgetMonth: 0,            //7.1.3
     expensesMonth: 0,          //7.1.3
     asking: function(){
+
+        if(confirm('Есть ли у вас дополнительный источник заработка?')){
+            let itemIncome = checkPromt('Какой у вас дополнительный заработок?',
+            [
+                ['Ввод не может быть пустым', (result) => (result === null)],
+                ['Необоходим хотя бы один буквенный символ', (result) => (result.match(/^[-+]?[0-9]+$/))]
+            ], false, true) //8.1.1a
+
+            let cashIncome = checkPromt('Сколько в месяц вы на этом зарабатываете',
+            [
+                ['Ввод не может быть пустым', (result) => (result === null)],
+                ['Введите число', (result) => (!isNumber(result))],
+                ['Доходы не могут иметь отрицательное значение', (result) => (result<0)]
+            ], true, true) //8.1.1b
+            appData.income[itemIncome] = cashIncome
+        }
         
         let addExpenses = prompt(`Перечислите возможные расходы за расчитываемый\
         период через запятую (пример: Квартплата, проездной, кредит)`)
@@ -143,20 +169,20 @@ const appData = {
             addExpenses
             .toLowerCase()
             .split(',')
-            .map(item => item.trim()) :
+            .map(item => item.trim().capitalize()) :   //8.1.2
             []; 
 
         appData.deposit = confirm(`Есть ли у вас депозит в банке?`);
         
     },
 
-    //#region 7.1.4 getMethods
+    //#region getMethods 7.1.4 
 
     //7.1.8
     getExpensesMonth: function () {
 
         appData.expensesMonth = 0;
-        
+        //8.1.1c
         const numOfExpenses = checkPromt('Введите количество статей расхода: ',
             [
                 ['Ввод не может быть пустым', (result) => (result === null)],
@@ -222,12 +248,37 @@ const appData = {
         }
         else return 'К сожалению, ваш уровень дохода ниже среднего';
       
+    },
+    getInfoDeposit: function() {
+        if(appData.deposit){
+            appData.percentDeposit = checkPromt('Какой годовой процент депозита?',
+            [
+                ['Ввод не может быть пустым', (result) => (result === null)],
+                ['Это не число', (result) => (!isNumber(result))],
+                ['Число процентов должно быть 0 до 100', (result) => (result < 0 || result > 100)]
+            ],
+            true, true) //8.1.1d
+            appData.moneyDeposit = checkPromt('Какая сумма лежит на депозите?',
+            [
+                ['Ввод не может быть пустым', (result) => (result === null)],
+                ['Это не число', (result) => (!isNumber(result))],
+                ['Сумма на депозите не может иметь отрицательное значение', (result) => (result<0)]
+            ],
+            true, true) //8.1.1e
+        }
+    },
+    calcSavedMoney: function() {
+        appData.budgetMonth * appData.period
     }
-    //#endregion 7.1.4
+    //#endregion getMethods
 }
+
+//#endregion Объект переменных приложения 
+
+
 //#region 7.1.6 Вызов функции ввода данных
 appData.asking()   
-//#region 7.1.6
+//#endregion 7.1.6
 
 //#region 7.1.5 || 7.1.11 Вызов функций изменения appData
 appData.getExpensesMonth()
@@ -240,7 +291,7 @@ let statusIncome = appData.getStatusIncome()
 //#endregion 7.1.5 || 7.1.11
 
 //#endregion Основная программа
-
+appData.getInfoDeposit()
 
 //#region 7.1.12 || 7.1.13 Вывод 
 
