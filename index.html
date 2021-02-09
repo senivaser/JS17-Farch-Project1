@@ -19,18 +19,41 @@
         -moz-osx-font-smoothing: grayscale;
 
       }
-      #root {
-        width: 100%;
+      #globalWrap {
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-start;
+        align-items: center;
+      }
+
+      #root8 {
+        width: 200px;
         height: 100vh;
-        font-size: 40px;
         display: flex;
         justify-content: center;
         align-items: center;
         flex-direction: column;
+        border: 1px solid black
+      }
+
+      #root9 {
+        width: 100%;
+        height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        border: 1px solid black
+      }
+
+      .date {
+        font-size: 25px;
+        color: red;
+        margin: 10px 0 10px 0;
       }
 
       .day {
-        
+        font-size: 25px;
         margin: auto 0 auto 0;
       }
 
@@ -47,9 +70,15 @@
     </style>
   </head>
   <body>
-    <div id = 'root'>
+    <div id= 'globalWrap'>
+      <div id = 'root8'>
 
+      </div>
+      <div id = 'root9'>
+
+      </div>
     </div>
+    
     
     
     <script src="scriptComplicated.js"></script>
