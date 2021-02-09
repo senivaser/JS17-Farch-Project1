@@ -125,7 +125,7 @@ const start = function () {
     
 }
 
-start(); 
+//start(); 
 //#endregion Запуск программы
 
 
@@ -169,7 +169,7 @@ const appData = {
             addExpenses
             .toLowerCase()
             .split(',')
-            .map(item => item.trim()) :   //8.1.2
+            .map(item => item.trim()) :  
             []; 
 
         appData.deposit = confirm(`Есть ли у вас депозит в банке?`);
@@ -277,48 +277,125 @@ const appData = {
 
 
 //#region 7.1.6 Вызов функции ввода данных
-appData.asking()   
+// appData.asking()   
 //#endregion 7.1.6
 
 //#region 7.1.5 || 7.1.11 Вызов функций изменения appData
-appData.getExpensesMonth()
+// appData.getExpensesMonth()
 
-appData.getBudjet();
+// appData.getBudjet();
 
-let targetMonth = appData.getTargetMonth();
+// let targetMonth = appData.getTargetMonth();
 
-let statusIncome = appData.getStatusIncome()
+// let statusIncome = appData.getStatusIncome()
 //#endregion 7.1.5 || 7.1.11
 
 //#endregion Основная программа
-appData.getInfoDeposit();
+// appData.getInfoDeposit();
 
 //#region 7.1.12 || 7.1.13 Вывод 
 
 //7.1.12
 //a
-console.log('---getExpensesMonth---');
-console.log(appData.expensesMonth, appData.expenses);
-appData.expenses
-console.log('------');
+// console.log('---getExpensesMonth---');
+// console.log(appData.expensesMonth, appData.expenses);
+// appData.expenses
+// console.log('------');
 
-//b 
-console.log('---getTargetMonth---');
-console.log(`Цель (${appData.mission} р.)\
- ${targetMonth > 0 ? `будет достигнута через ${targetMonth} месяцев(-а)`: 'не будет достигнута'}`);
-console.log('------');
+// //b 
+// console.log('---getTargetMonth---');
+// console.log(`Цель (${appData.mission} р.)\
+//  ${targetMonth > 0 ? `будет достигнута через ${targetMonth} месяцев(-а)`: 'не будет достигнута'}`);
+// console.log('------');
 
-//c
-console.log('---showStatusIncome---');
-console.log(statusIncome);
-console.log('------');
+// //c
+// console.log('---showStatusIncome---');
+// console.log(statusIncome);
+// console.log('------');
 
-//7.1.13
-console.log("Наша программа включает в себя данные: ")
-for (let property in appData) {
-    console.log(property)
-}
-console.log('---addExpenses---');
-console.log(appData.addExpenses.map(item => item.capitalize()).join(' '))
+// //7.1.13
+// console.log("Наша программа включает в себя данные: ")
+// for (let property in appData) {
+//     console.log(property)
+// }
+// console.log('---addExpenses---');
+// console.log(appData.addExpenses.map(item => item.capitalize()).join(' ')) //8.1.2
 
 //#endregion 7.1.12  Вывод
+
+//#region 9.1 pageNodes
+
+    //N is for Nodes
+    //NL is for Nodes List
+
+    //9.1.2a
+    const clcBtnN = document.getElementById('start')
+
+    //9.1.2b
+    const addIncBtnN = document.getElementsByTagName('button')[0]
+    const addExpBtnN = document.getElementsByTagName('button')[1]
+
+    //9.1.2c
+    const addIncInputNL = document.querySelectorAll('.additional_income-item')
+
+    //9.1.2d
+    const [
+        budMthDispN,
+        budDayDispN,
+        expMthDispN,
+        addIncDispN,
+        addExpDispN,
+        incForPerDispN,
+        tarMthDispN
+    ] = document.querySelectorAll('[class*="-value"]')
+    
+    //9.1.2e
+    const moneyInputN = document.querySelector('.salary-amount')
+    const incTtlInputN = document.querySelector('.income-items').querySelector('.income-title')
+    const incAmtInputN = document.querySelector('.income-amount')
+    const expTtlInputN = document.querySelector('.expenses-items').querySelector('.expenses-title')
+    const expAmtInputN = document.querySelector('.expenses-amount')
+    const addExpInputN = document.querySelector('.additional_expenses-item')
+    const depCheckN = document.querySelector('#deposit-check') 
+    const tarAmtInputN = document.querySelector('.target-amount')
+    const periodRangeN = document.querySelector('.period-select')
+    const periodAmountN = document.querySelector('.period-amount')
+
+    console.log('---9.1.2---')
+    console.log('---a---')
+    console.log(clcBtnN)
+    console.log('-------')
+    console.log('---b---')
+    console.log(
+        addIncBtnN, 
+        addExpBtnN)
+    console.log('-------')
+    console.log('---c---')
+    console.log(addIncInputNL)
+    console.log('-------')
+    console.log('---d---')
+    console.log(
+        budMthDispN,
+        budDayDispN,
+        expMthDispN,
+        addIncDispN,
+        addExpDispN,
+        incForPerDispN,
+        tarMthDispN,
+    )
+    console.log('-------')
+    console.log('---e---')
+    console.log(
+        incTtlInputN,
+        incAmtInputN,
+        expTtlInputN,
+        expAmtInputN,
+        addExpInputN,
+        depCheckN,
+        tarAmtInputN,
+        periodRangeN,
+        periodAmountN
+    )
+    console.log('-------')
+
+    //#endregion 9.1 pageNodes
