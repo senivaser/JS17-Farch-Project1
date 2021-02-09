@@ -329,14 +329,14 @@ const appData = {
     //NL is for Nodes List
 
     //9.1.2a
-    const clcBtnN = document.getElementById('start')
+    const clcBtnN = document.getElementById('start');
 
     //9.1.2b
-    const addIncBtnN = document.getElementsByTagName('button')[0]
-    const addExpBtnN = document.getElementsByTagName('button')[1]
+    const addIncBtnN = document.getElementsByTagName('button')[0];
+    const addExpBtnN = document.getElementsByTagName('button')[1];
 
     //9.1.2c
-    const addIncInputNL = document.querySelectorAll('.additional_income-item')
+    const addIncInputNL = document.querySelectorAll('.additional_income-item');
 
     //9.1.2d
     const [
@@ -347,33 +347,33 @@ const appData = {
         addExpDispN,
         incForPerDispN,
         tarMthDispN
-    ] = document.querySelectorAll('[class*="-value"]')
+    ] = document.querySelectorAll('[class*="-value"]');
     
     //9.1.2e
-    const moneyInputN = document.querySelector('.salary-amount')
-    const incTtlInputN = document.querySelector('.income-items').querySelector('.income-title')
-    const incAmtInputN = document.querySelector('.income-amount')
-    const expTtlInputN = document.querySelector('.expenses-items').querySelector('.expenses-title')
-    const expAmtInputN = document.querySelector('.expenses-amount')
-    const addExpInputN = document.querySelector('.additional_expenses-item')
-    const depCheckN = document.querySelector('#deposit-check') 
-    const tarAmtInputN = document.querySelector('.target-amount')
-    const periodRangeN = document.querySelector('.period-select')
-    const periodAmountN = document.querySelector('.period-amount')
+    const moneyInputN = document.querySelector('.salary-amount');
+    const incTtlInputN = document.querySelector('.income-items').querySelector('.income-title');
+    const incAmtInputN = document.querySelector('.income-amount');
+    const expTtlInputN = document.querySelector('.expenses-items').querySelector('.expenses-title');
+    const expAmtInputN = document.querySelector('.expenses-amount');
+    const addExpInputN = document.querySelector('.additional_expenses-item');
+    const depCheckN = document.querySelector('#deposit-check');
+    const tarAmtInputN = document.querySelector('.target-amount');
+    const periodRangeN = document.querySelector('.period-select');
+    const periodAmountN = document.querySelector('.period-amount');
 
-    console.log('---9.1.2---')
-    console.log('---a---')
-    console.log(clcBtnN)
-    console.log('-------')
-    console.log('---b---')
+    console.log('---9.1.2---');
+    console.log('---a---');
+    console.log(clcBtnN);
+    console.log('-------');
+    console.log('---b---');
     console.log(
         addIncBtnN, 
-        addExpBtnN)
-    console.log('-------')
-    console.log('---c---')
-    console.log(addIncInputNL)
-    console.log('-------')
-    console.log('---d---')
+        addExpBtnN);
+    console.log('-------');
+    console.log('---c---');
+    console.log(addIncInputNL);
+    console.log('-------');
+    console.log('---d---');
     console.log(
         budMthDispN,
         budDayDispN,
@@ -382,9 +382,9 @@ const appData = {
         addExpDispN,
         incForPerDispN,
         tarMthDispN,
-    )
-    console.log('-------')
-    console.log('---e---')
+    );
+    console.log('-------');
+    console.log('---e---');
     console.log(
         incTtlInputN,
         incAmtInputN,
@@ -395,7 +395,7 @@ const appData = {
         tarAmtInputN,
         periodRangeN,
         periodAmountN
-    )
-    console.log('-------')
+    );
+    console.log('-------');
 
-    //#endregion 9.1 pageNodes
+//#endregion 9.1 pageNodes
