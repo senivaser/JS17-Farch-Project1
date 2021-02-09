@@ -11,26 +11,26 @@ const getCurrentDay = function() {
 
 const getCurrentDateObject = function() {
     
-    const dateObj = new Date()
+    const dateObj = new Date();
     
     const DateFormat1 =  {
         weekday: 'long', 
         day: 'numeric', 
         month: 'long', 
         year: 'numeric',
-    }
+    };
 
     const timeFormat1 = {
         hours:'numeric',
         minutes:'numeric',
         seconds:'numeric'
-    }
+    };
 
     const DateTimeFormat2 = {
         hours:'2-digit',
         minutes:'2-digit',
         seconds:'2-digit'
-    }
+    };
 
     const getFormattedRU = function(dateObj, props) {
         return dateObj.toLocaleString('ru-Ru', props)
@@ -41,13 +41,13 @@ const getCurrentDateObject = function() {
     }
     
     const customFormatTime1 = function(dateObj, props){
-        const givenTime = getFormattedRU(dateObj, props).split(',')[1]
-        const [hours, minutes, seconds] = givenTime.split(':')
+        const givenTime = getFormattedRU(dateObj, props).split(',')[1];
+        const [hours, minutes, seconds] = givenTime.split(':');
         const [hLabel, mLabel, sLabel] = [
             ([11,12,13,14].includes(+hours)) ? 'часов': (hours%10 === 1) ? 'час': ([2,3,4].includes(hours%10)) ? 'часа': 'часов',
             ([11,12,13,14].includes(+minutes)) ? 'минут': (minutes%10 === 1) ? 'минута':  ([2,3,4].includes(minutes%10)) ? 'минуты': 'минут',
             ([11,12,13,14].includes(+seconds)) ? 'секунд': (seconds%10 === 1) ? 'секунда': ([2,3,4].includes(seconds%10)) ? 'секунды': 'секунд',
-        ]
+        ];
         return `${hours} ${hLabel} ${minutes} ${mLabel} ${seconds} ${sLabel}`
     }
 
@@ -94,24 +94,24 @@ week.forEach((dayName, numberOfDay) => {
 })
 //#endregion 8
 
-const date1N = document.createElement('div')
-const date2N = document.createElement('div')
+const date1N = document.createElement('div');
+const date2N = document.createElement('div');
 date1N.setAttribute('class', 'date');
-date2N.setAttribute('class', 'date')
-root9.appendChild(date1N)
-root9.appendChild(date2N)
+date2N.setAttribute('class', 'date');
+root9.appendChild(date1N);
+root9.appendChild(date2N);
 
-const {Date1, Date2, Ms} = getCurrentDateObject()
-let timeout = 1000 - Ms 
+const {Date1, Date2, Ms} = getCurrentDateObject();
+let timeout = 1000 - Ms;
 
 setTimeout(() => {
-    date1N.innerHTML = Date1
-    date2N.innerHTML = Date2    
+    date1N.innerHTML = Date1;
+    date2N.innerHTML = Date2;
 }, timeout);
 
 setInterval(() => {
     const datePer = getCurrentDateObject()
-    date1N.innerHTML = datePer.Date1
-    date2N.innerHTML = datePer.Date2        
+    date1N.innerHTML = datePer.Date1;
+    date2N.innerHTML = datePer.Date2;       
 
 }, 1000);
