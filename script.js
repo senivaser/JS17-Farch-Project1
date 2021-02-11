@@ -107,222 +107,38 @@ const checkPromt = function (
 
 //#endregion checkPromt
 
-//#endregion Вспомогательные функции
+//#region valueCheck || Как Check condition, только для проверки переменной
 
+//valueCheck проверяет значение по проверкам во втором аргументе. 
+//При первом верном условии, возвращает [false, 'Сообщение для вывода в alert соотв условию']
+//При ни одном верном возвращает [true]
 
-//#region Основная программа
-
-//#region Запуск программы
-
-//Ввод дохода за месяц
-let money;
-
-
-
-//start(); 
-//#endregion Запуск программы
-
-
-//#region Объект переменных приложения 
-const appData = {
-    income: {},
-    addIncome: [],
-    expenses: {},
-    addExpenses: [],
-    deposit: false,
-    percentDeposit: 0,         //8.0
-    moneyDeposit: 0,           //8.0
-    mission: 50000,
-    period: 3,
-    budget: money,             //7.1.2
-    budgetDay: 0,              //7.1.3
-    budgetMonth: 0,            //7.1.3
-    expensesMonth: 0,          //7.1.3
-    start: function () {
-        money = 0;
-        do {
-            money = +prompt('Ваш месячный доход');
-        } while (!isNumber(money));
-        
-    },
-    asking: function(){
-
-        if(confirm('Есть ли у вас дополнительный источник заработка?')){
-            let itemIncome = checkPromt('Какой у вас дополнительный заработок?',
-            [
-                ['Ввод не может быть пустым', (result) => (result === null)],
-                ['Необоходим хотя бы один буквенный символ', (result) => (result.match(/^[-+]?[0-9]+$/))]
-            ], false, true); //8.1.1a
-
-            let cashIncome = checkPromt('Сколько в месяц вы на этом зарабатываете',
-            [
-                ['Ввод не может быть пустым', (result) => (result === null)],
-                ['Введите число', (result) => (!isNumber(result))],
-                ['Доходы не могут иметь отрицательное значение', (result) => (result<0)]
-            ], true, true); //8.1.1b
-            appData.income[itemIncome] = cashIncome
-        }
-        
-        let addExpenses = prompt(`Перечислите возможные расходы за расчитываемый\
-        период через запятую (пример: Квартплата, проездной, кредит)`)
-
-        appData.addExpenses = (addExpenses) ?  
-            addExpenses
-            .toLowerCase()
-            .split(',')
-            .map(item => item.trim()) :  
-            []; 
-
-        appData.deposit = confirm(`Есть ли у вас депозит в банке?`);
-        
-    },
-
-    //#region getMethods 7.1.4 
-
-    //7.1.8
-    getExpensesMonth: function () {
-
-        appData.expensesMonth = 0;
-        //8.1.1c
-        const numOfExpenses = checkPromt('Введите количество статей расхода: ',
-            [
-                ['Ввод не может быть пустым', (result) => (result === null)],
-                ['Это не число', (result) => (!isNumber(result))],
-                ['Число не натуральное. Повторите ввод', (result) => (!(Number.isInteger(result) && result > 0))]
-            ],
-            true, true            
-            );
-        
-        for (let i = 0; i < numOfExpenses; i++) {
-
-            let expenseLabel = checkPromt(`Введите обязательную статью расходов (${i+1})`,
-            [
-                ['Ввод не может быть пустым', (result) => (result === null)],
-                ['Данная статья расходов уже присутствует в списке', 
-                    (result) => (Object.keys(appData.expenses).find((target => target === result)))]
-            ],
-            false, true
-            );
-
-            let expenseValue = checkPromt(`Во сколько это обойдется`,
-            [   
-                ['Ввод не может быть пустым', (result) => (result === null)],
-                ['Это не число', (result) => (!isNumber(result))],
-                ['Расходы не могут иметь отрицательное значение', (result) => (result<0)]
-            ],
-            true, true            
-            );
-            
-            appData.expenses = {...appData.expenses, [expenseLabel]: expenseValue};
-        }
-        
-        for (let label in appData.expenses) {
-            appData.expensesMonth += appData.expenses[label]
-        }
-        
-        return appData.expensesMonth
-    },    
+const valueCheck = function(value, conditions){
     
-    //7.1.9
-    getBudjet: function () {
-
-        appData.budgetMonth = appData.budget - appData.expensesMonth;
-        appData.budgetDay = appData.budgetMonth/getDaysInNextMonth();
-  
-        return [appData.budgetMonth, appData.budgetDay]
-      
-    },    
+    const checkResult = Boolean(conditions && conditions[0][1](value));
     
-    //7.1.10
-    getTargetMonth: function () {
-  
-        return Math.ceil(appData.mission/appData.budgetMonth); 
-         
-    },
-    getStatusIncome: function() {
-
-        if (!isNaN(appData.budgetDay)) {
-            if (appData.budgetDay >= 0 && appData.budgetDay < 600) return 'К сожалению, ваш уровень дохода ниже среднего';
-            else if (appData.budgetDay >= 600 && appData.budgetDay < 1200) return 'К сожалению, ваш уровень дохода ниже среднего';
-            else if (appData.budgetDay >= 1200) return 'К сожалению, ваш уровень дохода ниже среднего';
-            else return 'К сожалению, ваш уровень дохода ниже среднего';
-        }
-        else return 'К сожалению, ваш уровень дохода ниже среднего';
-      
-    },
-    getInfoDeposit: function() {
-        if(appData.deposit){
-            appData.percentDeposit = checkPromt('Какой годовой процент депозита?',
-            [
-                ['Ввод не может быть пустым', (result) => (result === null)],
-                ['Это не число', (result) => (!isNumber(result))],
-                ['Число процентов должно быть 0 до 100', (result) => (result < 0 || result > 100)]
-            ],
-            true, true); //8.1.1d
-            appData.moneyDeposit = checkPromt('Какая сумма лежит на депозите?',
-            [
-                ['Ввод не может быть пустым', (result) => (result === null)],
-                ['Это не число', (result) => (!isNumber(result))],
-                ['Сумма на депозите не может иметь отрицательное значение', (result) => (result<0)]
-            ],
-            true, true); //8.1.1e
-        }
-    },
-    calcSavedMoney: function() {
-        return appData.budgetMonth * appData.period;
+    let trigger = false;
+    let message;
+    
+    if (checkResult) {
+        trigger = true;
+        message = conditions && conditions[0][0];
     }
-    //#endregion getMethods
+    
+    conditions && conditions.shift()
+    
+    return (trigger) ? 
+        [false, message]: 
+        (!conditions.length) ?
+        [true]: 
+        valueCheck(value, conditions);
 }
 
-//#endregion Объект переменных приложения 
+////#endregion valueCheck
 
+//#endregion Вспомогательные функции
 
-//#region 7.1.6 Вызов функции ввода данных
-// appData.asking()   
-//#endregion 7.1.6
-
-//#region 7.1.5 || 7.1.11 Вызов функций изменения appData
-// appData.getExpensesMonth()
-
-// appData.getBudjet();
-
-// let targetMonth = appData.getTargetMonth();
-
-// let statusIncome = appData.getStatusIncome()
-//#endregion 7.1.5 || 7.1.11
-
-//#endregion Основная программа
-// appData.getInfoDeposit();
-
-//#region 7.1.12 || 7.1.13 Вывод 
-
-//7.1.12
-//a
-// console.log('---getExpensesMonth---');
-// console.log(appData.expensesMonth, appData.expenses);
-// appData.expenses
-// console.log('------');
-
-// //b 
-// console.log('---getTargetMonth---');
-// console.log(`Цель (${appData.mission} р.)\
-//  ${targetMonth > 0 ? `будет достигнута через ${targetMonth} месяцев(-а)`: 'не будет достигнута'}`);
-// console.log('------');
-
-// //c
-// console.log('---showStatusIncome---');
-// console.log(statusIncome);
-// console.log('------');
-
-// //7.1.13
-// console.log("Наша программа включает в себя данные: ")
-// for (let property in appData) {
-//     console.log(property)
-// }
-// console.log('---addExpenses---');
-// console.log(appData.addExpenses.map(item => item.capitalize()).join(' ')) //8.1.2
-
-//#endregion 7.1.12  Вывод
+//#region Объект переменных приложения 
 
 //#region 9.1 pageNodes
 
@@ -362,41 +178,343 @@ const appData = {
     const periodRangeN = document.querySelector('.period-select');
     const periodAmountN = document.querySelector('.period-amount');
 
-    console.log('---9.1.2---');
-    console.log('---a---');
-    console.log(clcBtnN);
-    console.log('-------');
-    console.log('---b---');
-    console.log(
-        addIncBtnN, 
-        addExpBtnN);
-    console.log('-------');
-    console.log('---c---');
-    console.log(addIncInputNL);
-    console.log('-------');
-    console.log('---d---');
-    console.log(
-        budMthDispN,
-        budDayDispN,
-        expMthDispN,
-        addIncDispN,
-        addExpDispN,
-        incForPerDispN,
-        tarMthDispN,
-    );
-    console.log('-------');
-    console.log('---e---');
-    console.log(
-        incTtlInputN,
-        incAmtInputN,
-        expTtlInputN,
-        expAmtInputN,
-        addExpInputN,
-        depCheckN,
-        tarAmtInputN,
-        periodRangeN,
-        periodAmountN
-    );
-    console.log('-------');
+    //10.1.0
+    let expItemsListN = document.querySelectorAll('.expenses-items')
+    let incItemsListN = document.querySelectorAll('.income-items')
+ 
 
 //#endregion 9.1 pageNodes
+
+moneyInputN.value = '10000';
+expTtlInputN.value = 'a';
+expAmtInputN.value = '5000';
+addExpInputN.value = 'a, b, c';
+
+
+//#region appData
+
+const appData = {
+    income: {},
+    addIncome: [],
+    expenses: {},
+    addExpenses: [],
+    deposit: false,
+    percentDeposit: 0,         
+    moneyDeposit: 0,           
+    budget: 0,             
+    budgetDay: 0,              
+    budgetMonth: 0,            
+    expensesMonth: 0,
+    incomeMonth: 0,          
+    
+    controlEntryFunction: function(){
+        const allInputNL = document.getElementsByTagName('input');
+        [...allInputNL].forEach(item => {
+
+            if (item.attributes.placeholder 
+                && item.attributes.placeholder.nodeValue === "Сумма"
+                && (item.getAttribute('listener') !== 'true')) {
+                item.addEventListener('input', (e) => {
+                    if (!e.target.value.match(/^[0-9]+$/)) item.value = item.value.slice(0, -1)
+                })
+            }
+            if (item.attributes.placeholder 
+                && item.attributes.placeholder.nodeValue === "Наименование"
+                && (item.getAttribute('listener') !== 'true')) {
+                item.addEventListener('input', (e) => {
+                    if (!e.target.value.match('^[а-яА-Я-_\ \.\,\!\?\№()\s]*$')) item.value = item.value.slice(0, -1)
+                })
+            }
+        })
+    },
+
+
+    //#region start 
+    start: function () {
+
+        
+        appData.budget = +moneyInputN.value
+
+        appData.getExpenses()
+        appData.getExpensesMonth()
+        appData.getAddIncome();
+        appData.getAddExpenses();
+        appData.getBudjet();
+        appData.showResult();
+        
+
+    },
+    //#endregion start 
+
+    //#region asking 
+    
+    asking: function(){
+
+       
+        appData.deposit = confirm(`Есть ли у вас депозит в банке?`);
+        
+    },
+    //#endregion asking 
+    
+    //#region showMethods
+
+    showResult: function(){
+        budMthDispN.value = appData.budgetMonth;
+        budDayDispN.value = Math.floor(appData.budgetDay);
+        expMthDispN.value = appData.expensesMonth;
+        addExpDispN.value = appData.addExpenses.join(', ');
+        addIncDispN.value = appData.addIncome.join(', ');
+        tarMthDispN.value = appData.getTargetMonth();
+        incForPerDispN.value = appData.calcSavedMoney();
+
+        periodRangeN.addEventListener('input', () => {
+
+            incForPerDispN.value = appData.calcSavedMoney();
+        
+        })
+        
+    },
+
+    //#endregion showMethods  
+
+    //#region addMethods
+
+    addExpensesBlock: function() {
+        
+        const expItemsN = [...expItemsListN].slice(-1)[0];
+        
+        const newExpItemsN = expItemsN.cloneNode(true);
+        
+        
+        // newExpItemsN.childNodes.forEach(item => {
+        //     if (item.tagName === 'INPUT') item.value = '';
+            
+        // });
+        
+        expItemsN.after(newExpItemsN);
+
+        // appData.controlEntryFunction();
+        
+        expItemsListN = document.querySelectorAll('.expenses-items');
+        
+        if (expItemsListN.length === 3) {
+            addExpBtnN.style.display = 'none'
+        };
+    },
+
+    addIncomeBlock: function() {
+
+        const incItemsN = [...incItemsListN].slice(-1)[0];
+        
+        const newIncItemsN = incItemsN.cloneNode(true);
+        
+        // newIncItemsN.childNodes.forEach(item => {
+        //     if (item.tagName === 'INPUT') item.value = '';
+        // });
+        
+        incItemsN.after(newIncItemsN);
+
+        // appData.controlEntryFunction();
+        
+        incItemsListN = document.querySelectorAll('.income-items');
+        
+        if (incItemsListN.length === 3) {
+            addIncBtnN.style.display = 'none'
+        };
+    },
+    
+    //#endregion addMethods
+
+
+    //#region getMethods  
+
+    getExpenses: function() {
+        
+        let alertTrigger = true;
+
+        const addData = {};
+        
+        expItemsListN = document.querySelectorAll('.expenses-items');
+        
+        expItemsListN.forEach((itemN) => {
+            const labelItem = itemN.querySelector('.expenses-title').value;
+            const valueItem = itemN.querySelector('.expenses-amount').value;
+
+            const checkResult = valueCheck(labelItem, 
+                [
+                    [`Cтатья расходов ${labelItem} повторяется в полях ввода`, 
+                        (result) => (Object.keys(addData).find((target => target === result)))]
+                ]
+            )
+
+            if(checkResult[0]) {
+                if (labelItem.trim().length) addData[labelItem] = +valueItem;
+            } else {
+                if (alertTrigger) {
+                    alert(checkResult[1])
+                    alertTrigger = false
+                }
+            }
+
+        })
+
+        if (alertTrigger) appData.expenses = (Object.keys(appData)) ? {...addData}: {empty: '0'};
+
+    },   
+
+    getIncome: function () {
+
+        let alertTrigger = true;
+
+        const addData = {};
+        
+        incItemsListN = document.querySelectorAll('.income-items');
+        
+        incItemsListN.forEach((itemN) => {
+            const labelItem = itemN.querySelector('.income-title').value;
+            const valueItem = itemN.querySelector('.income-amount').value;
+
+            const checkResult = valueCheck(labelItem, 
+                [
+                    [`Cтатья доходов ${labelItem} повторяется в полях ввода`, 
+                        (result) => (Object.keys(addData).find((target => target === result)))]
+                ]
+            );            
+
+            if(checkResult[0]) {
+                if (labelItem.trim().length) addData[labelItem] = +valueItem;
+            } else {
+                if (alertTrigger) {
+                    alert(checkResult[1])
+                    alertTrigger = false
+                }
+            };
+
+        })
+
+        if (alertTrigger) appData.income = (Object.keys(appData)) ? {...addData}: {empty: '0'};
+        
+    },
+
+    getExpensesMonth: function () {
+
+        appData.expensesMonth = 0;        
+        
+        for (let label in appData.expenses) {
+            appData.expensesMonth += appData.expenses[label];
+        };
+        
+        return appData.expensesMonth;
+    },    
+
+    getIncomeMonth: function () {
+
+        appData.incomeMonth = 0;        
+        
+        for (let label in appData.income) {
+            appData.incomeMonth += appData.income[label];
+        };
+        
+        return appData.incomeMonth;
+    },    
+
+
+    getAddExpenses: function() {
+
+        const addExpenses = addExpInputN.value;
+
+        appData.addExpenses = (addExpenses) ?  
+            addExpenses
+            .toLowerCase()
+            .split(',')
+            .map(item => item.trim()) :  
+            []; 
+
+    },
+
+    getAddIncome: function() {
+
+        addIncInputNL.forEach(item => {
+            let itemValue = item.value.trim();
+            if (itemValue !== '') {
+                appData.addIncome.push(itemValue)
+            }
+        })
+
+    },
+    
+
+    getBudjet: function () {
+
+        appData.budgetMonth = appData.budget + appData.incomeMonth - appData.expensesMonth;
+        appData.budgetDay = appData.budgetMonth/getDaysInNextMonth();
+  
+        return [appData.budgetMonth, appData.budgetDay]
+      
+    },    
+
+    getTargetMonth: function () {
+  
+        return Math.ceil(+tarAmtInputN.value/appData.budgetMonth); 
+         
+    },
+    getStatusIncome: function() {
+
+        if (!isNaN(appData.budgetDay)) {
+            if (appData.budgetDay >= 0 && appData.budgetDay < 600) return 'К сожалению, ваш уровень дохода ниже среднего';
+            else if (appData.budgetDay >= 600 && appData.budgetDay < 1200) return 'К сожалению, ваш уровень дохода ниже среднего';
+            else if (appData.budgetDay >= 1200) return 'К сожалению, ваш уровень дохода ниже среднего';
+            else return 'К сожалению, ваш уровень дохода ниже среднего';
+        }
+        else return 'К сожалению, ваш уровень дохода ниже среднего';
+      
+    },
+    getInfoDeposit: function() {
+        if(appData.deposit){
+            appData.percentDeposit = checkPromt('Какой годовой процент депозита?',
+            [
+                ['Ввод не может быть пустым', (result) => (result === null)],
+                ['Это не число', (result) => (!isNumber(result))],
+                ['Число процентов должно быть 0 до 100', (result) => (result < 0 || result > 100)]
+            ],
+            true, true);
+            appData.moneyDeposit = checkPromt('Какая сумма лежит на депозите?',
+            [
+                ['Ввод не может быть пустым', (result) => (result === null)],
+                ['Это не число', (result) => (!isNumber(result))],
+                ['Сумма на депозите не может иметь отрицательное значение', (result) => (result<0)]
+            ],
+            true, true); 
+        }
+    },
+    calcSavedMoney: function() {
+        return appData.budgetMonth * periodRangeN.value;
+    }
+    //#endregion getMethods
+}
+//#endregion appData
+
+//#region other var
+
+// appData.controlEntryFunction()
+
+clcBtnN.addEventListener('click', () => {
+    if (moneyInputN.value.trim().length) {
+        appData.start()
+    }
+})
+
+addExpBtnN.addEventListener('click', appData.addExpensesBlock)
+addIncBtnN.addEventListener('click', appData.addIncomeBlock)
+periodRangeN.addEventListener('input', () => {
+
+    periodAmountN.innerText = periodRangeN.value
+
+})
+
+
+//#endregion other var
+
+
+
+//#endregion Объект переменных приложения 
