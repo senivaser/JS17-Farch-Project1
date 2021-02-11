@@ -117,13 +117,7 @@ const checkPromt = function (
 //Ввод дохода за месяц
 let money;
 
-const start = function () {
-    money = 0;
-    do {
-        money = +prompt('Ваш месячный доход');
-    } while (!isNumber(money));
-    
-}
+
 
 //start(); 
 //#endregion Запуск программы
@@ -144,6 +138,13 @@ const appData = {
     budgetDay: 0,              //7.1.3
     budgetMonth: 0,            //7.1.3
     expensesMonth: 0,          //7.1.3
+    start: function () {
+        money = 0;
+        do {
+            money = +prompt('Ваш месячный доход');
+        } while (!isNumber(money));
+        
+    },
     asking: function(){
 
         if(confirm('Есть ли у вас дополнительный источник заработка?')){
