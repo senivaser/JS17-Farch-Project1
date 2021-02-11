@@ -286,14 +286,14 @@ const appData = {
         const newExpItemsN = expItemsN.cloneNode(true);
         
         
-        // newExpItemsN.childNodes.forEach(item => {
-        //     if (item.tagName === 'INPUT') item.value = '';
+        newExpItemsN.childNodes.forEach(item => {
+            if (item.tagName === 'INPUT') item.value = '';
             
-        // });
+        });
         
         expItemsN.after(newExpItemsN);
 
-        // appData.controlEntryFunction();
+        appData.controlEntryFunction();
         
         expItemsListN = document.querySelectorAll('.expenses-items');
         
@@ -308,13 +308,13 @@ const appData = {
         
         const newIncItemsN = incItemsN.cloneNode(true);
         
-        // newIncItemsN.childNodes.forEach(item => {
-        //     if (item.tagName === 'INPUT') item.value = '';
-        // });
+        newIncItemsN.childNodes.forEach(item => {
+            if (item.tagName === 'INPUT') item.value = '';
+        });
         
         incItemsN.after(newIncItemsN);
 
-        // appData.controlEntryFunction();
+        appData.controlEntryFunction();
         
         incItemsListN = document.querySelectorAll('.income-items');
         
@@ -496,7 +496,7 @@ const appData = {
 
 //#region other var
 
-// appData.controlEntryFunction()
+appData.controlEntryFunction()
 
 clcBtnN.addEventListener('click', () => {
     if (moneyInputN.value.trim().length) {
