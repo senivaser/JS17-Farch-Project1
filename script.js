@@ -217,7 +217,7 @@ const appData = {
                 && item.attributes.placeholder.nodeValue === "Наименование"
                 && (item.getAttribute('listener') !== 'true')) {
                 item.addEventListener('input', (e) => {
-                    if (!e.target.value.match('^[а-яА-Я-_\ \.\,\!\?\№()\s]*$')) item.value = item.value.slice(0, -1)
+                    if (!e.target.value.match('^[а-яА-Я-_\ \.\,\!\?\№()]*$')) item.value = item.value.slice(0, -1)
                 })
             }
         })
