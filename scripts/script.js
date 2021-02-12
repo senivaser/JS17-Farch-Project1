@@ -17,8 +17,7 @@ const render = function () {
     const newTodoN = document.createElement('li');
     newTodoN.classList.add('todo-item');
     
-    if (item.value) {                                   //12.1.3 Проверка на пустоту
-      newTodoN.innerHTML = 
+    newTodoN.innerHTML = 
       `<span class="text-todo">${item.value}</span>` +
       '<div class="todo-buttons">' +
         `<button class="todo-remove"></button>` +
@@ -53,7 +52,7 @@ const render = function () {
 
       });
       //#endregion Удаление по кнопке
-    };
+
   
   });
   
@@ -72,7 +71,7 @@ const addTodo = function (e) {
     completed: false
   };
   
-  if (newTodo.value.trim().length) todoData.push(newTodo);
+  if (newTodo.value && newTodo.value.trim().length) todoData.push(newTodo); //12.1.3 Проверка на пустоту
 
 
   render();
