@@ -237,8 +237,10 @@ const appData = {
 
         appData.getExpenses()
         appData.getExpensesMonth()
-        appData.getAddIncome();
+        appData.getIncome();
+        appData.getIncomeMonth();
         appData.getAddExpenses();
+        appData.getAddIncome();
         appData.getBudjet();
         appData.showResult();
         
