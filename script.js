@@ -185,11 +185,6 @@ const valueCheck = function(value, conditions){
 
 //#endregion 9.1 pageNodes
 
-moneyInputN.value = '10000';
-expTtlInputN.value = 'a';
-expAmtInputN.value = '5000';
-addExpInputN.value = 'a, b, c';
-
 
 //#region appData
 
@@ -435,6 +430,8 @@ const appData = {
     },
 
     getAddIncome: function() {
+
+        appData.addIncome = []
 
         addIncInputNL.forEach(item => {
             let itemValue = item.value.trim();
