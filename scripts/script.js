@@ -71,8 +71,9 @@ const addTodo = function (e) {
     value: headerInputN.value,
     completed: false
   };
+  
+  if (newTodo.value.trim().length) todoData.push(newTodo);
 
-  todoData.push(newTodo);
 
   render();
 };
