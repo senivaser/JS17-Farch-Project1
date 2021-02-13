@@ -89,6 +89,7 @@ class Form{
       inputNL.forEach(item => {
         if (item.attributes.type && item.attributes.type.nodeValue !== 'submit') {
           dataObj[ item.name || 'empty'] = item.value
+          if (this.selectedId === 'register') item.value = ''
         }
       })
       //console.log(validator)
