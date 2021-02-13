@@ -33,7 +33,7 @@ const render = (message) => {
   }
 
   if (isAuth) {
-    console.log(loginBlock)
+    //console.log(loginBlock)
     form.changeBlock(logoutBlock, loginBlock)
     form.chooseBlock(logoutBlock)    
     contentBlock.innerHTML = `<p>Текущий пользователь: ${user}</p><p></p><p>Зарегистрированные пользователи: </p>`

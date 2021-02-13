@@ -105,7 +105,7 @@ class Form{
 
   chooseBlock(block) {
     const id = block.id
-    console.log(block)
+    //console.log(block)
     if (id !== this.selectedId) {
       let block = this.blocks[id]
       this.selectedId = id
