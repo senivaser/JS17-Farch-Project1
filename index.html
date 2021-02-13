@@ -9,26 +9,29 @@
 
 	<link rel="stylesheet" type="text/css" href="css/normalize.css">
 	<link rel="stylesheet" type="text/css" href="css/style.css">
+	<script type="module" src="scripts/index.js" defer></script>
 </head>
 <body>
 
-<header class="header">
-	<form class="todo-control">
-		<label><input class="header-input" type="text" placeholder="Какие планы?"></label>
-		<button class="header-button" id="add"></button>
-	</form>
-</header>
+	<div class="wrapper fadeInDown">
+		<div id="formContent">
+			<!-- Tabs Titles -->
+			<h2 id = "loginSwitch" class="active"> Sign In </h2>
+			<h2 id = "registerSwitch"class="inactive underlineHover">Sign Up </h2>
+	
+			<!-- Login Form -->
+			<form id = "form">
 
-<div class="todo-container">
+			</form>
+	
+			<!-- Remind Passowrd -->
+			<div id="formFooter">
+				<a class="underlineHover" href="#">Forgot Password?</a>
+			</div>
+	
+		</div>
+	</div>
 
-	<ul class="todo todo-list" id="todo">
-		
-	</ul>
-	<ul class="todo todo-completed" id="completed">
-		
-	</ul>
-</div>
 
-<script type="text/javascript" src="scripts/script.js"></script>
 </body>
 </html>
