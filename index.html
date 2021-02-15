@@ -29,26 +29,53 @@
         flex-direction: column;
       }
 
-      .day {
-        
-        margin: auto 0 auto 0;
-      }
-
       code {
         font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
           monospace;
       }
+
+      .colorNote {
+        
+        margin: 40px;
+      }
+
+      .colorButton {
+        min-width: 100px;
+        min-height: 50px;
+        cursor: pointer;
+      }
+
+      .colorButtonHover {
+        width: 100px;
+        height: 50px;
+        cursor: pointer;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .label{
+        cursor: pointer;
+        margin: 20px;
+        user-select: none;
+      }
+      
       .bold {
         font-weight: bold; 
       }
       .italic {
         font-style: italic; 
       }
+
+
     </style>
   </head>
   <body>
     <div id = 'root'>
-
+      <div class="colorString"></div>
+      <div class="colorButton">
+        <div class="label">New Color</div>
+      </div>
     </div>
     
     
