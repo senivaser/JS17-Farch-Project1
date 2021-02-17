@@ -348,8 +348,8 @@ appData.prototype.addExpensesBlock = function() {
     });
     
     expItemsN.after(newExpItemsN);
-
-    appData.controlEntryFunction();
+    
+    appData.prototype.controlEntryFunction();
     
     expItemsListN = document.querySelectorAll('.expenses-items');
     
@@ -370,7 +370,7 @@ appData.prototype.addIncomeBlock = function() {
     
     incItemsN.after(newIncItemsN);
 
-    appData.controlEntryFunction();
+    appData.prototype.controlEntryFunction();
     
     incItemsListN = document.querySelectorAll('.income-items');
     
