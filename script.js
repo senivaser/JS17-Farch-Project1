@@ -179,15 +179,11 @@ class appData {
     
         this.budget = +moneyInputN.value
     
-        this.getExpenses()
-        this.getExpensesMonth()
-        this.getIncome();
-        this.getIncomeMonth();
-        this.getAddExpenses();
-        this.getAddIncome();
+        this.getAccountingData() //getIncome, getExpenses
+        this.getMonthStatData() //getExpensesMonth, getIncomeMonth
+        this.getOptionsData() //getAddIncome, getAddOutcome
         this.getBudjet();
-        this.showResult();
-    
+        this.showResult();    
         this.disableDataInputs();
        
     
@@ -216,7 +212,7 @@ class appData {
     
     showResult(){
 
-        budMthDispN.value = this.budgetMonth;
+        budMthDispN.value = this.budgetMonth+this.expensesMonth;
         budDayDispN.value = Math.floor(this.budgetDay);
         expMthDispN.value = this.expensesMonth;
         addExpDispN.value = this.addExpenses.join(', ');
@@ -309,13 +305,11 @@ class appData {
     static resetBlocks(blockList) {
         
         [...blockList].forEach((item, index) => {
-            console.dir(item)
             if (index === 0) {
                 item.childNodes.forEach(item => {
                     if (item.tagName === 'INPUT') item.value = '';
                 });
             } else if (item.tagName !== 'BUTTON') {
-                console.dir(item)
                 item.remove()
             } 
         })
@@ -331,29 +325,37 @@ class appData {
 
     //#endregion resetMethods
     
-    //#region getMethods  
+    //#region getMethods
     
-    getExpenses() {
-        
+    getAccountingData() {
+
         let alertTrigger = true;
-    
         const addData = {};
+        const fieldNL = [
+            ...document.querySelectorAll('.income-items'), 
+            ...document.querySelectorAll('.expenses-items')
+        ]
+
+        fieldNL.forEach((itemN) => {       
         
-        expItemsListN = document.querySelectorAll('.expenses-items');
-        
-        expItemsListN.forEach((itemN) => {
-            const labelItem = itemN.querySelector('.expenses-title').value;
-            const valueItem = itemN.querySelector('.expenses-amount').value;
-    
+            const categoryStr = itemN.className.split('-')[0]
+            const labelItem = itemN.querySelector(`.${categoryStr}-title`).value;
+            const valueItem = itemN.querySelector(`.${categoryStr}-amount`).value;
+
             const checkResult = valueCheck(labelItem, 
                 [
                     [`Cтатья расходов ${labelItem} повторяется в полях ввода`, 
                         (result) => (Object.keys(addData).find((target => target === result)))]
                 ]
             )
-    
+
+            
+
             if(checkResult[0]) {
-                if (labelItem.trim().length) addData[labelItem] = +valueItem;
+                if (labelItem.trim().length) {
+                    if (!addData[categoryStr]) addData[categoryStr] = {}
+                    addData[categoryStr][labelItem] = +valueItem;
+                }                    
             } else {
                 if (alertTrigger) {
                     alert(checkResult[1])
@@ -363,93 +365,49 @@ class appData {
     
         })
     
-        if (alertTrigger) this.expenses = (Object.keys(addData)) ? {...addData}: {empty: '0'};
+        if (alertTrigger) {
+            Object.keys(addData).forEach((category) => {
+                this[category] = (Object.keys(addData[category])) ? {...addData[category]}: {empty: '0'};
+            })
+        }
+    }    
     
-    }
-    
-    getIncome() {
-    
-        let alertTrigger = true;
-    
-        const addData = {};
-        
-        incItemsListN = document.querySelectorAll('.income-items');
-        
-        incItemsListN.forEach((itemN) => {
-            const labelItem = itemN.querySelector('.income-title').value;
-            const valueItem = itemN.querySelector('.income-amount').value;
-    
-            const checkResult = valueCheck(labelItem, 
-                [
-                    [`Cтатья доходов ${labelItem} повторяется в полях ввода`, 
-                        (result) => (Object.keys(addData).find((target => target === result)))]
-                ]
-            );            
-    
-            if(checkResult[0]) {
-            if (labelItem.trim().length) addData[labelItem] = +valueItem;
-            } else {
-                if (alertTrigger) {
-                    alert(checkResult[1])
-                    alertTrigger = false
-                }
+    getMonthStatData() {
+
+        const accDataToStat = {
+            expenses: this.expenses,
+            income: this.income
+        }
+
+        for (let category in accDataToStat) {
+            for (let label in this[category]) {
+                this[`${category}Month`] += this[`${category}`][label];
             };
-    
-        })
-    
-        if (alertTrigger) this.income = (Object.keys(addData)) ? {...addData}: {empty: '0'};
-        
+        }
+
     }
-    
-    getExpensesMonth() {
-    
-        this.expensesMonth = 0;        
-        
-        for (let label in this.expenses) {
-            this.expensesMonth += this.expenses[label];
-        };
-        
-        return this.expensesMonth;
-    }  
-    
-    getIncomeMonth () {
-    
-        this.incomeMonth = 0;        
-        
-        for (let label in this.income) {
-            this.incomeMonth += this.income[label];
-        };
-        
-        return this.incomeMonth;
-    }   
-    
-    
-    getAddExpenses() {
-    
-        const addExpenses = addExpInputN.value;
-    
-        this.addExpenses = (addExpenses) ?  
-            addExpenses
-            .toLowerCase()
-            .split(',')
-            .map(item => item.trim()) :  
-            []; 
+
+       
+    getOptionsData() {
+        const options = {
+            Expenses: (addExpInputN.value) ?  
+                addExpInputN.value
+                .toLowerCase()
+                .split(',')
+                .map(item => item.trim()) :  
+                [],
+            Income: [...addIncInputNL].map(item => item.value)
+        }
+
+        for (let category in options) {
+            options[category].forEach(item => {
+                if (item.trim() !== '') {
+                    this[`add${category}`].push(item.trim())
+                }
+            })
+        }
     
     }
-    
-    getAddIncome() {
-    
-        this.addIncome = []
-    
-        addIncInputNL.forEach(item => {
-            let itemValue = item.value.trim();
-            if (itemValue !== '') {
-                this.addIncome.push(itemValue)
-            }
-        })
-    
-    }
-    
     
     getBudjet () {
     
