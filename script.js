@@ -1,3 +1,5 @@
+'use-strict'
+
 const DOMElement = function ({
     selector, height, width, bg, fontsize
 }) {
