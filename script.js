@@ -95,6 +95,9 @@ const valueCheck = (value, conditions) => {
     const tarAmtInputN = document.querySelector('.target-amount');
     const periodRangeN = document.querySelector('.period-select');
     const periodAmountN = document.querySelector('.period-amount');
+    const depBankSelectN = document.querySelector('.deposit-bank')
+    const depAmtInputN = document.querySelector('.deposit-amount')
+    const depPrcInputN = document.querySelector('.deposit-percent')
 
     //10.1.0
     let expItemsListN = document.querySelectorAll('.expenses-items')
@@ -123,6 +126,7 @@ class appData {
         this.budgetMonth = 0;            
         this.expensesMonth = 0;
         this.incomeMonth = 0; 
+        this.alert = false;
 
     }
 
@@ -148,6 +152,7 @@ class appData {
         })
     }
     
+    //#region launchers
     reset () {
     
         
@@ -164,7 +169,8 @@ class appData {
         this.budgetMonth = 0            
         this.expensesMonth = 0
         this.incomeMonth = 0 
-        this.isCalculated = false 
+        this.isCalculated = false
+        this.alert = false; 
     
         this.resetDataInputs()
         this.resetExpensesBlocks()
@@ -172,24 +178,33 @@ class appData {
         
         addIncBtnN.style.display = 'block'
         addExpBtnN.style.display = 'block'
+        depPrcInputN.style.display = 'none'
     }
     
-    //#region start 
+
     start () {
-    
+
+        this.alert = false;
         this.budget = +moneyInputN.value
     
         this.getAccountingData() //getIncome, getExpenses
         this.getMonthStatData() //getExpensesMonth, getIncomeMonth
         this.getOptionsData() //getAddIncome, getAddOutcome
+        
+        this.getInfoDeposit();
+        
         this.getBudjet();
-        this.showResult();    
-        this.disableDataInputs();
+        
+        if (!this.alert) {
+            this.showResult();    
+            this.disableDataInputs();
+        }
+       
+        
        
     
     }
-    //#endregion start 
-    
+
     buttonHandle() {
         if (this.isCalculated) {
             this.reset()
@@ -197,16 +212,9 @@ class appData {
             this.start()
         }
     }
+
+    //#endregion launchers
     
-    //#region asking 
-    
-    asking(){
-    
-       
-        this.deposit = confirm(`Есть ли у вас депозит в банке?`);
-        
-    }
-    //#endregion asking 
     
     //#region showMethods
     
@@ -230,6 +238,7 @@ class appData {
     }
     
     //#endregion showMethods  
+    
     
     //#region addMethods
     
@@ -278,7 +287,9 @@ class appData {
     }
     
     //#endregion addMethods
-    //#region resetMethods
+   
+    
+    //#region resetInputMethods
 
     setDataInputs(isEnabled, toClear) {
         const allDataInputNL = document.querySelector('.data').querySelectorAll('input[type=text]');
@@ -323,13 +334,13 @@ class appData {
         appData.resetBlocks(incItemsListN)
     }
 
-    //#endregion resetMethods
+    //#endregion resetInputMethods
     
+
     //#region getMethods
     
     getAccountingData() {
 
-        let alertTrigger = true;
         const addData = {};
         const fieldNL = [
             ...document.querySelectorAll('.income-items'), 
@@ -345,7 +356,7 @@ class appData {
             const checkResult = valueCheck(labelItem, 
                 [
                     [`Cтатья расходов ${labelItem} повторяется в полях ввода`, 
-                        (result) => (Object.keys(addData).find((target => target === result)))]
+                        (result) => (Object.keys(addData[categoryStr] || {null: null}).find((target => target === result)))]
                 ]
             )
 
@@ -357,15 +368,15 @@ class appData {
                     addData[categoryStr][labelItem] = +valueItem;
                 }                    
             } else {
-                if (alertTrigger) {
+                if (!this.alert) {
                     alert(checkResult[1])
-                    alertTrigger = false
+                    this.alert = true
                 }
             }
     
         })
     
-        if (alertTrigger) {
+        if (!this.alert) {
             Object.keys(addData).forEach((category) => {
                 this[category] = (Object.keys(addData[category])) ? {...addData[category]}: {empty: '0'};
             })
@@ -410,8 +421,9 @@ class appData {
     }
     
     getBudjet () {
-    
-        this.budgetMonth = this.budget + this.incomeMonth - this.expensesMonth;
+
+        const moneyDeposit = this.moneyDeposit * this.percentDeposit / 100
+        this.budgetMonth = this.budget + this.incomeMonth - this.expensesMonth + moneyDeposit;
         this.budgetDay = this.budgetMonth/getDaysInNextMonth();
     
         return [this.budgetMonth, this.budgetDay]
@@ -434,37 +446,100 @@ class appData {
         else return 'К сожалению, ваш уровень дохода ниже среднего';
       
     }
+
+    getInfoDeposit() {
+        if(this.deposit){
+            if (+depPrcInputN.value < 0 || +depPrcInputN.value > 100) {
+                this.alert = true;
+                alert('Проценты на депозите должны иметь значение от 0 до 100!');
+            } else {
+                this.percentDeposit = depPrcInputN.value
+                this.moneyDeposit = depAmtInputN.value
+            }
+            
+        }
+    }
+
+    //#endregion getMethods
+
+
+    //#region internalMethods
     calcSavedMoney() {
         return this.budgetMonth * periodRangeN.value;
     }
+
+    changePercent() {
+        const selectValue = this.value;
+        if(selectValue === 'other') {
+            depPrcInputN.style.display = 'block'
+        } else {
+            depPrcInputN.value = selectValue
+        }
+
+    }
+    //#endregion internalMethods
     
-    initializeListeners(){
-        clcBtnN.addEventListener('click', () => {
-            if (moneyInputN.value.trim().length) {
-                this.start()
+
+    //#region handlers
+
+    handleStart () {
+        if (moneyInputN.value.trim().length) {
+            this.start()
+            if(!this.alert) {
                 clcBtnN.setAttribute('style', 'display: none')
                 resBtnN.setAttribute('style', 'display: block')
             }
-           
-        })
-        
-        resBtnN.addEventListener('click', () => {
-            this.reset()
-            clcBtnN.setAttribute('style', 'display: block')
-            resBtnN.setAttribute('style', 'display: none')
-        })
-        
-        addExpBtnN.addEventListener('click', this.addExpensesBlock)
-        addIncBtnN.addEventListener('click', this.addIncomeBlock)
-        periodRangeN.addEventListener('input', () => {
-        
-            periodAmountN.innerText = periodRangeN.value
-        
-        })
+        }
     }
-    //#endregion getMethods
-    
-    
+
+    handleReset () {        
+        this.reset()
+        clcBtnN.setAttribute('style', 'display: block')
+        resBtnN.setAttribute('style', 'display: none')        
+    }
+
+    handlePeriodRange () {
+        periodAmountN.innerText = periodRangeN.value
+    }
+
+    handleDepositCheck (event) {
+        
+        if (event.target.checked) {
+            depBankSelectN.style.display = 'inline-block';
+            depAmtInputN.style.display = 'inline-block';
+            
+            this.deposit = true
+            depBankSelectN.addEventListener('change', this.changePercent)
+        
+        } else {
+            
+            depBankSelectN.style.display = 'none';
+            depAmtInputN.style.display = 'none';
+            depBankSelectN.value = '';
+            depAmtInputN.value = '';
+            
+            this.deposit = false
+
+            depBankSelectN.removeEventListener('change', this.changePercent)
+        }
+    }
+
+    //#endregion handlers
+   
+    //#region eventListeners
+    initializeListeners(){
+        
+        clcBtnN.addEventListener('click', this.handleStart.bind(this));
+        resBtnN.addEventListener('click', this.handleReset.bind(this));
+        
+        addExpBtnN.addEventListener('click', this.addExpensesBlock);
+        addIncBtnN.addEventListener('click', this.addIncomeBlock);
+        
+        periodRangeN.addEventListener('input', this.handlePeriodRange);
+
+        depCheckN.addEventListener('change', this.handleDepositCheck.bind(this));
+    }
+    //#region eventListeners
     
 }
 //#endregion appData
