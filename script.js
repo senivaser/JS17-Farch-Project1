@@ -128,6 +128,7 @@ class appData {
         this.incomeMonth = 0; 
         this.alert = false;
         this.dispData = new Map()
+        this.isLoad = false;
 
     }
 
@@ -176,6 +177,7 @@ class appData {
         this.resetDataInputs()
         this.resetExpensesBlocks()
         this.resetIncomeBlocks()
+        this.resetResults()
         
         addIncBtnN.style.display = 'block'
         addExpBtnN.style.display = 'block'
@@ -199,6 +201,8 @@ class appData {
         if (!this.alert) {
             this.showResult();    
             this.disableDataInputs();
+            this.getDispData()
+            this.setValues();
         }
        
         
@@ -228,16 +232,25 @@ class appData {
         addIncDispN.value = this.addIncome.join(', ');
         tarMthDispN.value = this.getTargetMonth();
         incForPerDispN.value = this.calcSavedMoney();
-    
+        
         periodRangeN.addEventListener('input', () => {
     
             incForPerDispN.value = this.calcSavedMoney();
         
         })
 
-        this.getDispData()
-        this.setValuesLS();
+
               
+    }
+
+    resetResults(){
+
+        const dispNL = document.querySelectorAll('[class*="-value"]');
+        [...dispNL].forEach(item => {
+            item.value = ''
+        })
+
+
     }
     
     //#endregion showMethods  
@@ -516,29 +529,105 @@ class appData {
 
     //#endregion dispData 
 
-    //#region localStorage
-    
-    setValuesLS() {
+    //#region localStorage & cookie
+
+    static getCookie(name) {
+
+        let matches = document.cookie.match(new RegExp(
+          "(?:^|; )" + name.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, '\\$1') + "=([^;]*)"
+        ));
+        return matches ? decodeURIComponent(matches[1]) : undefined;
+
+    }
+
+    static setCookie(name, value, options = {}) {
+
+        options = {
+          path: '/',
+          ...options
+        };
+      
+        if (options.expires instanceof Date) {
+          options.expires = options.expires.toUTCString();
+        }
+      
+        let updatedCookie = encodeURIComponent(name) + "=" + encodeURIComponent(value);
+      
+        for (let optionKey in options) {
+          updatedCookie += "; " + optionKey;
+          let optionValue = options[optionKey];
+          if (optionValue !== true) {
+            updatedCookie += "=" + optionValue;
+          }
+        }
+        
+        document.cookie = updatedCookie;
+    }
+
+    static deleteCookie(name) {
+
+        appData.setCookie(name, 'toDelete', {
+          'max-age': '0'
+        })
+    }
+
+    static deleteAllCookies() {
+        const cookies = document.cookie.split(";");
+        
+        cookies.forEach(cookie  => {
+            const name =  decodeURIComponent(cookie).trim().split('=')[0]
+
+            appData.deleteCookie(name);
+        })
+    }
+
+    clearAllStorageData() {
+        appData.deleteAllCookies();
+        localStorage.clear()
+        this.isLoad=false
+    }
+
+    setValues() {
 
         this.getDispData()
-        localStorage.setItem('dispData', appData.mapToJSON(this.dispData))
+        localStorage.setItem('dispData', appData.mapToJSON(this.dispData));
+        [...this.dispData].forEach(([key, value]) => {
+           appData.setCookie(key, value, {['max-age']: 60*60*24*365*100}) 
+        })
+        appData.setCookie('isLoad', true, {['max-age']: 60*60*24*365*100}) 
+        
 
     }
 
-    async getValuesLS() {
+    async getValues() {
 
-        this.dispData = appData.JSONtoMap(await localStorage.getItem('dispData'))
+        let deleteTrigger = false
+        this.dispData = appData.JSONtoMap(await localStorage.getItem('dispData'));
+        [...this.dispData].forEach(([key, value]) => {
+            if (appData.getCookie(key) !== value) deleteTrigger = true 
+        })
+        if (deleteTrigger) {
+            this.handleReset();
+        }
         this.setDispData()
+
     }
 
-    //#endregion localStorage
+    //#endregion localStorage & cookie
 
 
     //#region handlers
 
     handleStart () {
         if (moneyInputN.value.trim().length) {
-            this.start()
+            if (!this.isLoad) {
+                this.start() 
+            }
+            else {
+
+                this.disableDataInputs();                
+
+            }
             if(!this.alert) {
                 clcBtnN.setAttribute('style', 'display: none')
                 resBtnN.setAttribute('style', 'display: block')
@@ -548,6 +637,7 @@ class appData {
 
     handleReset () {        
         this.reset()
+        this.clearAllStorageData()
         clcBtnN.setAttribute('style', 'display: block')
         resBtnN.setAttribute('style', 'display: none')        
     }
@@ -581,10 +671,12 @@ class appData {
     //#endregion handlers
    
     //#region eventListeners
-    initializeListeners(){
+    async initializeListeners(){
 
-        this.getValuesLS()
+        await this.getValues()
         this.setDispData()
+        this.isLoad = appData.getCookie('isLoad')
+        if(this.isLoad) this.handleStart();
         
         clcBtnN.addEventListener('click', this.handleStart.bind(this));
         resBtnN.addEventListener('click', this.handleReset.bind(this));
