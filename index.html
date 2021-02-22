@@ -1,14 +1,34 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" type="text/css" href="css/normalize.css">
+    <style>
+      #container{ 
+        position: relative;
+        width: 100%;
+        height: 100%;
+      }
+      #handlerStop{
+        position: absolute;
+        top: 50%;
+        left: 50%;
+      }
+      #speed{
+        position: absolute;
+        top: calc(50% + 50px);
+        left: 50%;
+      }
+    </style>
 </head>
 <body>
-  <input id="input">
-  <p id="result"></p>  
-
-<script src="script.js"></script> 
+  <div id = "container">
+    <button id="handlerStop">Stop</button>
+    <input id = "speed" type="range" min="1" max="40">
+  </div>
+    
+<script type="text/javascript" src="script.js"></script>
 </body>
 </html>
