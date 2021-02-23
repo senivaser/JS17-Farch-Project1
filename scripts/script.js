@@ -38,7 +38,8 @@ window.addEventListener('DOMContentLoaded', () => {
         [timerHoursN.textContent, timerMinutesN.textContent, timerSecondsN.textContent] = 
           [...Object.values(timer)]
       } else {
-        [timerHoursN.textContent, timerMinutesN.textContent, timerSecondsN.textContent] = ['00', '00', '00']
+        [timerHoursN.textContent, timerMinutesN.textContent, timerSecondsN.textContent] = ['00', '00', '00'];
+        [timerHoursN.style.color, timerMinutesN.style.color, timerSecondsN.style.color] = ['red', 'red', 'red'];
         if (interval) clearInterval(interval)
       }
 
@@ -51,6 +52,6 @@ window.addEventListener('DOMContentLoaded', () => {
     
   }
 
-  countTimer('01 march 2021')
+  countTimer('01 feb 2021')
   
 }) 
