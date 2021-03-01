@@ -81,12 +81,12 @@ function cubicBezierTimingOut (t) {
   return cubicBezierFunction(0.02, 0, 0.56, 0.33)(t)
 }
 //#endregion cubicBezierTiming
-function drawIn(progress, props) {
-  props.elem.style.transform = `translateY(calc(-100% + ${progress}*(50vh) + ${progress}*50%)`
+function drawIn(progress, {elem}) {
+  elem.style.transform = `translateY(calc(-100% + ${progress}*(50vh) + ${progress}*50%)`
 } 
 
-function drawOut(progress, props) {
-  props.elem.style.transform = `translateY(calc(50vh - 50% - ${progress}*(50vh) - ${progress}*50%))`
+function drawOut(progress, {elem}) {
+  elem.style.transform = `translateY(calc(50vh - 50% - ${progress}*(50vh) - ${progress}*50%))`
 } 
 
 function scrollToNextSlide(progress, { mainHeight, currentScroll }) { 
