@@ -94,6 +94,8 @@ function scrollToNextSlide(progress, { mainHeight, currentScroll }) {
 }
 
 
+
+
 window.addEventListener('DOMContentLoaded', () => {
   'use-strict'
 
@@ -151,23 +153,35 @@ window.addEventListener('DOMContentLoaded', () => {
   countTimer('01 feb 2021');
 
   const toggleMenu = () => {
-    const btnMenuN = document.querySelector('.menu');
-    const menuN = document.querySelector('menu');
-    const closeBtnN = document.querySelector('.close-btn');
 
-    const menuItemsNL = menuN.querySelectorAll('ul>li');
+    const menuN = document.querySelector('menu');
 
     const handleMenu = () => {
       menuN.classList.toggle('active-menu')
     }
 
-    btnMenuN.addEventListener('click', handleMenu)
+    document.documentElement.addEventListener('click', (event) => {
+      const target = event.target
 
-    closeBtnN.addEventListener('click', handleMenu);
+      if (
+        (target.closest('.menu')) ||
+        (menuN.classList.contains('active-menu') && !target.closest('.menu')) ||
+        (target.closest('.close-btn')) ||
+        (target.closest('menu>ul>li'))
+        )
+      {
+        handleMenu();
+      }
 
-    [...menuItemsNL].forEach(item => {
-      item.addEventListener('click', handleMenu)
-    })
+    });
+
+    // btnMenuN.addEventListener('click', handleMenu)
+
+    // closeBtnN.addEventListener('click', handleMenu);
+
+    // [...menuItemsNL].forEach(item => {
+    //   item.addEventListener('click', handleMenu)
+    // })
   }
 
   toggleMenu()
@@ -178,23 +192,20 @@ window.addEventListener('DOMContentLoaded', () => {
     const popupBtnNL = document.querySelectorAll('.popup-btn');
     const popupCloseBtnN = document.querySelector('.popup-close');
     popupContentN.style.top = '0';
-    popupCloseBtnN.style.transform = 'translateY(-100%)';
-    
-    [...popupBtnNL].forEach(elem => {
-      elem.addEventListener('click', () => {
-       popupN.style.display = 'block';
-       animate({
-         timing: cubicBezierTimingIn,
-         draw: drawIn,
-         duration: 1000,
-         props: {
-          elem: popupContentN
-         }
-       })
-      })
-    }) 
+    popupContentN.style.transform = 'translateY(-100%)';
 
-    popupCloseBtnN.addEventListener('click', () => {
+    const animateIn = () => {
+      animate({
+        timing: cubicBezierTimingIn,
+        draw: drawIn,
+        duration: 1000,
+        props: {
+         elem: popupContentN
+        }
+      })
+    }
+
+    const animateOut = () => {
       animate({
         timing: cubicBezierTimingOut,
         draw: drawOut,
@@ -204,8 +215,29 @@ window.addEventListener('DOMContentLoaded', () => {
         },
         cb: () => {popupN.style.display = 'none';}
       })
-    })
+    }
+
+
+    [...popupBtnNL].forEach(elem => {
+      elem.addEventListener('click', () => {
+       popupN.style.display = 'block';
+       animateIn()
+      })
+    }); 
+
+
+    popupCloseBtnN.addEventListener('click', () => {
+      animateOut()
+    });
+
+    popupN.addEventListener('click', (event) => {
+      if(!event.target.closest('.popup-content')) {
+        animateOut()
+      }
+    });
   };
+
+    
 
   togglePopUp();
 
@@ -231,4 +263,41 @@ window.addEventListener('DOMContentLoaded', () => {
   }
 
   scrollHandle()
+
+  const tabs = () => {
+    const tabHeaderN = document.querySelector('.service-header');
+    const tabNL = tabHeaderN.querySelectorAll('.service-header-tab');
+    const tabContentNL = document.querySelectorAll('.service-tab');
+
+    const toggleTabContent = (index) => {
+      for (let i = 0; i < tabContentNL.length; i++){
+        if (index === i){
+          tabNL[i].classList.add('active');
+          tabContentNL[i].classList.remove('d-none');
+        } else {
+          tabNL[i].classList.remove('active');
+          tabContentNL[i].classList.add('d-none');
+        }
+      }
+    }
+
+    
+
+    tabHeaderN.addEventListener('click', (event) => {
+
+      const target = event.target.closest('.service-header-tab');
+
+        if (target.classList.contains('service-header-tab')){
+          tabNL.forEach((item, i) => {
+            if(item === target) {
+              toggleTabContent(i);              
+            }
+          })
+        }
+
+      
+    })
+  }
+
+  tabs()
 }) 
