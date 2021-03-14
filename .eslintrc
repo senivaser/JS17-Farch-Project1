@@ -2,21 +2,22 @@
   "env": {
     "browser": true,
     "es6": true,
-    "node": false
+    "node": true
   },
   "extends": "eslint:recommended",
   "parserOptions": {
-    "ecmaVersion": 2020,
-    "sourceType": "module"
+    "ecmaVersion": 2019
   },
   "rules": {
     "indent": [
       "error",
       4
+      //"tab"
     ],
     "linebreak-style": [
       "error",
-      "windows"
+      // "windows"
+       "unix"
     ],
     "semi": [
       "error",
