@@ -180,30 +180,44 @@ window.addEventListener('DOMContentLoaded', () => {
     popupContentN.style.top = '0';
     popupContentN.style.transform = 'translateY(-100%)';
     
+    const isMobile = () => {
+      return (window.innerWidth < 768) ? true: false
+    }
+    
     [...popupBtnNL].forEach(elem => {
       elem.addEventListener('click', () => {
        popupN.style.display = 'block';
-       animate({
-         timing: cubicBezierTimingIn,
-         draw: drawIn,
-         duration: 1000,
-         props: {
-          elem: popupContentN
-         }
-       })
+       if (!isMobile()) {
+        animate({
+          timing: cubicBezierTimingIn,
+          draw: drawIn,
+          duration: 1000,
+          props: {
+           elem: popupContentN
+          }
+        })
+       } else {
+        popupContentN.style.transform = 'translateY(calc(50vh - 50%))';
+       }       
       })
     }) 
 
     popupCloseBtnN.addEventListener('click', () => {
-      animate({
-        timing: cubicBezierTimingOut,
-        draw: drawOut,
-        duration: 500,
-        props: {
-          elem: popupContentN
-        },
-        cb: () => {popupN.style.display = 'none';}
-      })
+      if (!isMobile()) {
+        animate({
+          timing: cubicBezierTimingOut,
+          draw: drawOut,
+          duration: 500,
+          props: {
+            elem: popupContentN
+          },
+          cb: () => {popupN.style.display = 'none';}
+        })
+      } else {
+        popupContentN.style.transform = 'translateY(-100%)';
+        popupN.style.display = 'none';
+      }
+      
     })
   };
 
