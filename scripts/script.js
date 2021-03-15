@@ -178,7 +178,7 @@ window.addEventListener('DOMContentLoaded', () => {
     const popupBtnNL = document.querySelectorAll('.popup-btn');
     const popupCloseBtnN = document.querySelector('.popup-close');
     popupContentN.style.top = '0';
-    popupCloseBtnN.style.transform = 'translateY(-100%)';
+    popupContentN.style.transform = 'translateY(-100%)';
     
     [...popupBtnNL].forEach(elem => {
       elem.addEventListener('click', () => {
