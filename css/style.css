@@ -48,6 +48,7 @@ body {
 }
 
 .todo-container {
+    min-height: auto;
     width: 100%;
     float: left;
     padding: 15px;
@@ -123,13 +124,13 @@ body {
 
 .todo-item {
     width: 100%;
-    min-height: 50px;
+
     float: left;
     font-size: 14px;
     font-weight: 500;
     color: #444;
     line-height: 22px;
-
+    overflow: hidden;
     background: #fff;
     border-radius: 5px;
     position: relative;
@@ -138,6 +139,61 @@ body {
     padding: 14px 100px 14px 14px;
     word-break: break-word;
 }
+
+.todo-error {
+
+    width: 100%;
+    float: left;
+    font-size: 14px;
+    font-weight: 500;
+    color: rgb(151, 19, 19);
+    line-height: 22px;
+
+    background: rgb(255, 172, 172);
+    border-radius: 5px;
+    position: relative;
+    box-shadow: 0 1px 2px rgba(44, 62, 80, 0.10);
+    margin: 0 0 10px 0;
+    padding: 14px 100px 14px 14px;
+    word-break: break-word;
+    transition: height ease-out 0.5s;
+}
+
+.d-1 {
+    animation: fadeIn 0.6s ease-in;
+}
+
+.d-0 {
+    visibility: hidden;
+    opacity: 0;
+    animation: fadeIn 0.6s ease-in reverse;
+}
+
+@keyframes fadeIn {
+    0% {
+       visibility: hidden;
+       opacity: 0;
+       height: 0px;
+       padding-top: 0px;
+       padding-bottom: 0px;
+    }
+    30% {
+        visibility: hidden;
+        opacity: 0;
+        height: 50px;
+    }
+    31% {
+        visibility: visible;
+        opacity: 0;
+        height: 50px;
+    }
+    100% {
+        visibility: visible;
+        opacity: 1;
+        height: 50px;
+    }
+}
+
 
 .todo-item:last-of-type {
     margin: 0;
@@ -201,7 +257,7 @@ body {
 
 .todo-completed:before {
     content: '';
-    width: 150px;
+    width: 150px!important;
     height: 1px;
     background: #d8e5e0;
 
@@ -212,7 +268,7 @@ body {
     margin: 0 0 0 -75px;
 }
 
-.todo:empty:after {
+.todo:nth-child(2):empty:before {
     content: 'Нет задач';
     margin: 15px 0 0 0;
 }
@@ -222,6 +278,7 @@ body {
 }
 
 .todo:after,
+.todo:before,
 .todo-completed:after {
     width: 100%;
     display: block;
