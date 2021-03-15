@@ -165,7 +165,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
       if (
         (target.closest('.menu')) ||
-        (menuN.classList.contains('active-menu') && !target.closest('.menu')) ||
+        (menuN.classList.contains('active-menu') && !target.closest('menu')) ||
         (target.closest('.close-btn')) ||
         (target.closest('menu>ul>li'))
         )
@@ -195,26 +195,35 @@ window.addEventListener('DOMContentLoaded', () => {
     popupContentN.style.transform = 'translateY(-100%)';
 
     const animateIn = () => {
-      animate({
-        timing: cubicBezierTimingIn,
-        draw: drawIn,
-        duration: 1000,
-        props: {
-         elem: popupContentN
-        }
-      })
+      if (!isMobile()) {
+        animate({
+          timing: cubicBezierTimingIn,
+          draw: drawIn,
+          duration: 1000,
+          props: {
+           elem: popupContentN
+          }
+        })
+       } else {
+        popupContentN.style.transform = 'translateY(calc(50vh - 50%))';
+       }       
     }
 
     const animateOut = () => {
-      animate({
-        timing: cubicBezierTimingOut,
-        draw: drawOut,
-        duration: 500,
-        props: {
-          elem: popupContentN
-        },
-        cb: () => {popupN.style.display = 'none';}
-      })
+      if (!isMobile()) {
+        animate({
+          timing: cubicBezierTimingOut,
+          draw: drawOut,
+          duration: 500,
+          props: {
+            elem: popupContentN
+          },
+          cb: () => {popupN.style.display = 'none';}
+        })
+      } else {
+        popupContentN.style.transform = 'translateY(-100%)';
+        popupN.style.display = 'none';
+      }
     }
 
 
