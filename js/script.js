@@ -37,7 +37,8 @@ class ToDo {
   //#region render
   render() {
 
-    //Затираем списки
+    //Затираем списки и ввод
+    this.input.value = ''
     this.todoCompleted.textContent = ''; 
     this.todoList.textContent = '';
 
@@ -165,7 +166,6 @@ class ToDo {
       
       this.todoData.set(newTodo.key, newTodo);
       this.render();
-      console.log(newTodo.completed.opposite())
     } else {
       this.render();
       this.setNotification('Ввод не может быть пустым', 'todo-error'); //Сообщение о некорректном вводе появляется после рендера
