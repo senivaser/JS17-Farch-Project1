@@ -194,6 +194,10 @@ window.addEventListener('DOMContentLoaded', () => {
     popupContentN.style.top = '0';
     popupContentN.style.transform = 'translateY(-100%)';
 
+    const isMobile = () => {
+      return (window.innerWidth < 768) ? true: false
+    }
+
     const animateIn = () => {
       if (!isMobile()) {
         animate({
