@@ -47,6 +47,7 @@ class ToDo {
     `
       <span class="text-todo">${todo.value}</span>
       <div class="todo-buttons">
+        <button class="todo-edit"></button>
         <button class="todo-remove"></button>
         <button class="todo-complete"></button>
       </div> 
@@ -161,6 +162,8 @@ class ToDo {
         this.deleteTodo(id, '.todo-item')
       } else if (target.closest('.todo-complete')) {
         this.completeTodo(id, '.todo-item')
+      } else if (target.closest('.todo-edit')) {
+        
       }
 
     })
