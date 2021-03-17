@@ -93,6 +93,11 @@ function scrollToNextSlide(progress, { mainHeight, currentScroll }) {
   document.documentElement.scrollTop = `${currentScroll + (mainHeight - currentScroll)*progress}`
 }
 
+String.prototype.capitalize = function() {
+  return this.charAt(0).toUpperCase() + this.slice(1).toLowerCase();
+}
+
+
 
 
 
@@ -415,5 +420,111 @@ window.addEventListener('DOMContentLoaded', () => {
   }
 
   slider()
+
+  const teamImg = () => {
+
+    const teamN = document.getElementById('command')
+
+    const changeImage = (event) => {
+      if (event.target.matches('.command__photo')) {
+
+        const elem = event.target
+        const temp = elem.src
+        elem.src = elem.dataset.img
+        elem.dataset.img = temp
+
+      }      
+    }
+
+    teamN.addEventListener('mouseover', changeImage)
+    teamN.addEventListener('mouseout', changeImage)
+    
+  } 
+
+  teamImg()
+
+  const inputControl = () => {
+
+    const inputReg = (data, target, reg) => {
+      if (!reg.test(data)) target.value = target.value.slice(0, -1)
+    } //Проверка символа в событии input
+
+    const checkReg = (target, regFrom, regTo) => {
+      console.log(regFrom, regTo)
+      target.value = target.value.replace(regFrom, regTo)
+      console.log(target.value)
+    } //Проверка строки после blur
+
+    document.documentElement.addEventListener('input', (event) => {
+
+      const target = event.target
+
+      if (target.closest('.calc-item')) { 
+        inputReg(event.data, target, /\d/)
+      }
+
+      if (target.closest('.form-email')) {
+        inputReg(event.data, target, /[a-z@_\.-]/i)
+      }
+
+      if (target.closest('.form-phone')) {
+        inputReg(event.data, target, /[-()\d]/i)
+      }
+
+      if (target.closest('.mess, .form-name, .form2-name')) {
+        inputReg(event.data, target, /[а-я\ \-]/i)
+      }
+    })
+
+    const inputsList = [...document.querySelectorAll('.calc-item, .form-email, .form-phone, .mess, .form-name, .form2-name')]
+
+    inputsList.forEach(item => {
+      item.addEventListener('blur', (event) => {
+  
+        const target = event.target
+        checkReg(target, /(^[\ \-]+)/, '')
+        checkReg(target, /[\ \-]+$/, '')
+        checkReg(target, /\s+/ig, ' ')
+        checkReg(target, /-+/ig, '-')
+
+  
+        if (target.closest('.calc-item')) {
+   
+          checkReg(target, /[^\d]/g, '', '')
+        }
+  
+        if (target.closest('.form-email')) {
+          checkReg(target, /[^a-z@_\.-]/i, '')
+  
+        }
+  
+        if (target.closest('.form-phone')) {
+          checkReg(target, /[^-()\d]/i, '')
+  
+        }
+  
+        if (target.closest('.mess, .form-name, .form2-name')) {
+          checkReg(target, /[^а-я\ \-]/i, '')
+        }
+  
+        if (target.matches('.form-name, .form2-name')) {
+          console.log('qq')
+          const splitCArr = target.value.match(/[\ \-]/g)
+          target.value = target.value.split(/[\ \-]/).map((word, index) => 
+          { 
+            console.log(word, word.capitalize())
+            return  (splitCArr && splitCArr[index]) 
+            ? word.capitalize()+splitCArr[index] 
+            : word.capitalize()
+          }).join('')
+
+
+            
+        }
+      })
+    })
+  }
+
+  inputControl()
 
 }) 
