@@ -93,6 +93,10 @@ function scrollToNextSlide(progress, { mainHeight, currentScroll }) {
   document.documentElement.scrollTop = `${currentScroll + (mainHeight - currentScroll)*progress}`
 }
 
+function drawProgressValue (progress, {elem, start, end}) {
+  elem.textContent = parseInt(start + (end - start) * progress)
+}
+
 String.prototype.capitalize = function() {
   return this.charAt(0).toUpperCase() + this.slice(1).toLowerCase();
 }
@@ -189,7 +193,8 @@ window.addEventListener('DOMContentLoaded', () => {
     // })
   }
 
-  toggleMenu()
+  toggleMenu();
+
 
   const togglePopUp = () => {
     const popupN = document.querySelector('.popup');
@@ -255,9 +260,8 @@ window.addEventListener('DOMContentLoaded', () => {
     });
   };
 
-    
-
   togglePopUp();
+
 
   scrollHandle = () => {
     const scrollButtonN = document.querySelector('#scrollButton')
@@ -280,7 +284,8 @@ window.addEventListener('DOMContentLoaded', () => {
     })
   }
 
-  scrollHandle()
+  scrollHandle();
+
 
   const tabs = () => {
     const tabHeaderN = document.querySelector('.service-header');
@@ -317,7 +322,8 @@ window.addEventListener('DOMContentLoaded', () => {
     })
   }
 
-  tabs()
+  tabs();
+
 
   const slider = () => {
     const slidesNL = document.querySelectorAll('.portfolio-item');
@@ -419,7 +425,8 @@ window.addEventListener('DOMContentLoaded', () => {
     startPlaySlides();
   }
 
-  slider()
+  slider();
+
 
   const teamImg = () => {
 
@@ -441,7 +448,8 @@ window.addEventListener('DOMContentLoaded', () => {
     
   } 
 
-  teamImg()
+  teamImg();
+
 
   const inputControl = () => {
 
@@ -450,16 +458,14 @@ window.addEventListener('DOMContentLoaded', () => {
     } //Проверка символа в событии input
 
     const checkReg = (target, regFrom, regTo) => {
-      console.log(regFrom, regTo)
       target.value = target.value.replace(regFrom, regTo)
-      console.log(target.value)
     } //Проверка строки после blur
 
     document.documentElement.addEventListener('input', (event) => {
 
       const target = event.target
 
-      if (target.closest('.calc-item')) { 
+      if (target.closest('.calc-item') && !target.closest('.calc-type')) { 
         inputReg(event.data, target, /\d/)
       }
 
@@ -488,7 +494,7 @@ window.addEventListener('DOMContentLoaded', () => {
         checkReg(target, /-+/ig, '-')
 
   
-        if (target.closest('.calc-item')) {
+        if (target.closest('.calc-item') || !target.closest('.calc-type')) {
    
           checkReg(target, /[^\d]/g, '', '')
         }
@@ -508,23 +514,86 @@ window.addEventListener('DOMContentLoaded', () => {
         }
   
         if (target.matches('.form-name, .form2-name')) {
-          console.log('qq')
           const splitCArr = target.value.match(/[\ \-]/g)
           target.value = target.value.split(/[\ \-]/).map((word, index) => 
           { 
-            console.log(word, word.capitalize())
             return  (splitCArr && splitCArr[index]) 
             ? word.capitalize()+splitCArr[index] 
             : word.capitalize()
           }).join('')
-
-
             
         }
       })
     })
   }
 
-  inputControl()
+  inputControl();
+
+
+  const calc = (price) => {
+    
+    const calcBlock = document.querySelector('.calc-block')
+    const calcType = document.querySelector('.calc-type')
+    const calcSquare = document.querySelector('.calc-square')
+    const calcDay = document.querySelector('.calc-day')
+    const calcCount = document.querySelector('.calc-count')
+    const totalValue = document.querySelector('#total')
+
+
+    const countSum = (price = 100, callbackAnimation) => {
+
+      let total = 0;
+      let countValue = 1;
+      let dayValue = 1;
+      const typeValue = calcType.options[calcType.selectedIndex].value
+      const squareValue = +calcSquare.value
+
+      if (calcCount.value > 1) {
+        countValue += (calcCount.value-1) / 10;
+      }
+
+      if (calcDay.value) {
+        if (calcDay.value < 5) {
+          dayValue *= 2;
+        } else if (calcDay.value < 10){
+          dayValue *= 1.5;
+        } 
+      }
+
+      
+
+      if (typeValue && squareValue){
+        total = parseInt(price * typeValue * squareValue * countValue * dayValue)
+      } else {
+        total = 0
+      }
+
+      callbackAnimation(total);
+    }
+
+    calcBlock.addEventListener('change', (event) => {
+      
+      const target = event.target;
+      const initialValue = +totalValue.textContent
+
+      if (target.matches('.calc-type') || target.matches('.calc-square') || 
+      target.matches('.calc-day') || target.matches('.calc-count')) {
+        countSum(price, (total) => {
+          animate({
+            timing: cubicBezierTimingIn,
+            draw: drawProgressValue,
+            duration: 1000,
+            props: {
+             elem: totalValue,
+             start: initialValue,
+             end: total
+            }
+          })
+        })
+      }
+    })
+  }
+
+  calc(100);
 
 }) 
